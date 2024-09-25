@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Request Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        label,
+        input,
+        textarea,
+        button {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+        }
+
+        pre {
+            background: #f0f0f0;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="./lib/bundle.js"></script>
+    <h1>Switch Standard Integration steps</h1>
+    <pre id="logger"></pre>
+
+    <label for="baseUrl">Base URL:</label>
+    <input type="text" id="osName" placeholder="android or iOS">
+
+
+    <button id="initSdk">Init SDK</button>
+    <h2>Init SDK Output:</h2>
+    <pre id="initSdkOutput"></pre>
+
+    <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+
+    <button id="authToken">Fetch Auth Token</button>
+    <h2>Auth Token Output:</h2>
+    <pre id="authTokenOutput"></pre>
+    <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+
+    <input type="text" id="paymentUrl" placeholder="phone.pe:checkoutResolve//reservationId">
+    <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+    <button id="pay">Pay</button>
+
+
+    <!-- <label for="baseUrl">Base URL:</label>
+    <input type="text" id="baseUrl" placeholder="https://api.example.com">
+
+    <label for="apiEndpoint">API Endpoint:</label>
+    <input type="text" id="apiEndpoint" placeholder="/data">
+
+    <label for="headers">Headers (JSON format):</label>
+    <textarea id="headers" placeholder='{"Content-Type": "application/json"}'></textarea>
+
+    <label for="requestOptions">Request Options (JSON format):</label>
+    <textarea id="requestOptions" placeholder='{"method": "GET"}'></textarea>
+
+    <button id="fetchButton">Fetch Data</button> -->
+
+    <!-- <h2>Response:</h2>
+    <pre id="responseOutput"></pre>
+
+    <h2>Logs:</h2>
+    <pre id="logOutput"></pre> -->
+    <script>
+        (function () {
+            var old = console.log;
+            var logger = document.getElementById('logger');
+            console.log = function () {
+                for (var i = 0; i < arguments.length; i++) {
+                    if (typeof arguments[i] == 'object') {
+                        logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(arguments[i], undefined, 2) : arguments[i]) + '<br />';
+                    } else {
+                        logger.innerHTML += arguments[i] + '<br />';
+                    }
+                }
+            }
+        })();
+
+        document.getElementById('initSdk').addEventListener('click', async () => {
+            PhonePe.PhonePe.loggingEnabled = true
+            PhonePe.PhonePe.build(PhonePe.Constants.Species.web, document.getElementById("osName").value).then((sdk) => {
+                    document.getElementById('initSdkOutput').textContent = sdk.isMethodSupported('getSupportedWebSDKVersion');
+            })
+        })
+
+        document.getElementById('authToken').addEventListener('click', async () => {
+            let env = PhonePe.Constants.Species.web
+            PhonePe.PhonePe.build(env).then((sdk) => {
+                let res = sdk.isMethodSupported('fetchAuthToken')
+                console.log('fetchAuthToken method supported = ' + res)
+                sdk.fetchAuthToken().then((res2) => {
+                    document.getElementById('authTokenOutput').textContent = JSON.stringify(res2);
+                    request = JSON.stringify(
+                        {"request": 
+                        btoa(
+                            JSON.stringify({ "grantToken": res2.grantToken})
+                            )
+                        }
+                    );
+                    document.getElementById('requestOptions').value = request;
+                    document.getElementById('headers').value = JSON.stringify({"X-CLIENT-ID":"ABHIBUS","X-CLIENT-TYPE":"MERCHANT","X-AUTHORIZED-FOR-ID":"ABHIBUS","merchantId":"ABHIBUS"})
+                }).catch((err) => {
+                    document.getElementById('authTokenOutput').textContent = err;
+                })
+            })
+        })
+
+        document.getElementById('pay').addEventListener('click', async () => {
+            window.open(document.getElementById("paymentUrl").value,"_self");
+        })
+
+
+        function fetchGrantToken() {
+            let env = PhonePe.Constants.Species.web
+            PhonePe.PhonePe.build(env).then((sdk) => {
+                let res = sdk.isMethodSupported('fetchGrantToken')
+                console.log('fetchGrantToken method supported = ' + res)
+                sdk.fetchGrantToken().then((res2) => {
+                    console.log('res2 = ' + res2)
+                    alert(res2)
+                }).catch((err) => {
+                    console.log('fetchGrantToken with error = ' + err)
+                    alert('fetchGrantToken error = ' + JSON.stringify(err))
+                })
+            })
+        }
+
+
+        document.getElementById('fetchButton').addEventListener('click', async () => {
+            document.getElementById('logOutput').textContent = "";
+            // Get input values
+            const baseUrl = document.getElementById('baseUrl').value.trim();
+            const apiEndpoint = document.getElementById('apiEndpoint').value.trim();
+            const headersText = document.getElementById('headers').value.trim();
+            const requestOptionsText = document.getElementById('requestOptions').value.trim();
+
+            // Parse headers and request options from JSON
+            let headers = {};
+            let requestOptions = {};
+            try {
+                headers = JSON.parse(headersText);
+                requestOptions = JSON.parse(requestOptionsText);
+            } catch (e) {
+                document.getElementById('responseOutput').textContent = 'Error parsing JSON: ' + e.message;
+                return;
+            }
+
+            try {
+                // Construct the full URL
+                const url = `${baseUrl}${apiEndpoint}`;
+                document.getElementById('logOutput').textContent = document.getElementById('logOutput').textContent + "\n" + url;
+
+                // Define the request options
+                const options = {
+                    method: 'POST',
+                    body: requestOptions
+                };
+                document.getElementById('logOutput').textContent = document.getElementById('logOutput').textContent + "\n" + JSON.stringify(options);
+
+
+                // Make the request
+                const response = await fetch(url, options);
+
+                // Check if the response is okay
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                // Parse the response JSON
+                const data = await response.json();
+
+                // Display the response data
+                document.getElementById('responseOutput').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                // Handle any errors
+                document.getElementById('responseOutput').textContent = 'Error fetching data: ' + error.message;
+            }
+        });
+    </script>
+</body>
+
+</html>
