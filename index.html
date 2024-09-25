@@ -112,8 +112,8 @@
                             )
                         }
                     );
-                    document.getElementById('requestOptions').value = request;
-                    document.getElementById('headers').value = JSON.stringify({"X-CLIENT-ID":"ABHIBUS","X-CLIENT-TYPE":"MERCHANT","X-AUTHORIZED-FOR-ID":"ABHIBUS","merchantId":"ABHIBUS"})
+                    // document.getElementById('requestOptions').value = request;
+                    // document.getElementById('headers').value = JSON.stringify({"X-CLIENT-ID":"ABHIBUS","X-CLIENT-TYPE":"MERCHANT","X-AUTHORIZED-FOR-ID":"ABHIBUS","merchantId":"ABHIBUS"})
                 }).catch((err) => {
                     document.getElementById('authTokenOutput').textContent = err;
                 })
