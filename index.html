@@ -33,6 +33,15 @@
 </head>
 
 <body>
+    <button onclick="startDownload()">Download File</button>
+
+    <script type="text/javascript">
+        function startDownload() {
+            // Simulate a download link (can be any file type like PDF, MP3, etc.)
+            window.location.href = "https://pdfobject.com/pdf/sample.pdf";
+        }
+    </script>
+
     <script src="./lib/bundle.js"></script>
     <h1>Switch Standard Integration steps</h1>
     <pre id="logger"></pre>
@@ -105,13 +114,13 @@
                 console.log('fetchAuthToken method supported = ' + res)
                 sdk.fetchAuthToken().then((res2) => {
                     document.getElementById('authTokenOutput').textContent = JSON.stringify(res2);
-                    request = JSON.stringify(
-                        {"request": 
-                        btoa(
-                            JSON.stringify({ "grantToken": res2.grantToken})
-                            )
-                        }
-                    );
+                    // request = JSON.stringify(
+                    //     {"request": 
+                    //     btoa(
+                    //         JSON.stringify({ "grantToken": res2.grantToken})
+                    //         )
+                    //     }
+                    // );
                     // document.getElementById('requestOptions').value = request;
                     // document.getElementById('headers').value = JSON.stringify({"X-CLIENT-ID":"ABHIBUS","X-CLIENT-TYPE":"MERCHANT","X-AUTHORIZED-FOR-ID":"ABHIBUS","merchantId":"ABHIBUS"})
                 }).catch((err) => {
