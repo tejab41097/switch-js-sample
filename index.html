@@ -33,7 +33,26 @@
 </head>
 
 <body>
-    <a href="https://tejab41097.github.io/switch-js-sample/images/sample.pdf" download="sample.pdf" > Download</a>
+    <button id="downloadBtn1">Download pdf</button>
+    <script>
+    document.getElementById('downloadBtn1').addEventListener('click', function () {
+        // URL of the image to be downloaded
+        const imageUrl = 'https://tejab41097.github.io/switch-js-sample/images/sample.pdf';
+        // Create a temporary anchor element
+                const anchor = document.createElement('a');
+                anchor.href = imageUrl;
+                anchor.download = 'downloaded-image.png'; // Filename for the downloaded image
+
+                // Append the anchor to the body
+                document.body.appendChild(anchor);
+
+                // Trigger the download by simulating a click
+                anchor.click();
+
+                // Remove the anchor from the document
+                document.body.removeChild(anchor);       
+        });
+    </script>
     <script type="text/javascript">
         function startDownload() {
             // Simulate a download link (can be any file type like PDF, MP3, etc.)
