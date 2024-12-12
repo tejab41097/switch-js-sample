@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -33,6 +32,9 @@
 </head>
 
 <body>
+
+    <button onclick=triggerSmsObserver()>Navigate to IRCTC dummy page</button>
+
     <button id="downloadBtn1">Download pdf</button>
     <script>
     document.getElementById('downloadBtn1').addEventListener('click', function () {
@@ -58,6 +60,13 @@
             // Simulate a download link (can be any file type like PDF, MP3, etc.)
             window.location.href = "https://pdfobject.com/pdf/sample.pdf";
         }
+    </script>
+    <script>
+        function triggerSmsObserver() {
+            window.location.href = 'irctc_merchant.html';
+            // Android.startListeningToIncomingMessages()
+        }
+    
     </script>
 
     <script src="./lib/bundle.js"></script>
