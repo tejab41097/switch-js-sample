@@ -135,12 +135,21 @@
         })
 
         document.getElementById('authToken').addEventListener('click', async () => {
+            const rid = 'R2501121251440590905873Z'
+            const fallbackURL = 'https://www.google.com/'
             let env = PhonePe.Constants.Species.web
-            PhonePe.PhonePe.build(env).then((sdk) => {
-                let res = sdk.isMethodSupported('fetchAuthToken')
-                console.log('fetchAuthToken method supported = ' + res)
-                sdk.fetchAuthToken().then((res2) => {
-                    document.getElementById('authTokenOutput').textContent = JSON.stringify(res2);
+
+            PhonePe.PhonePe.build(env).then(sdk => {
+                sdk.proceedToPay(rid, fallbackURL).then(res => {
+                    alert(res)
+                }).catch(err => alert(err))
+            }).catch(err => {
+                alert('failed to proceed to pay ', err)
+            })
+                // let res = sdk.isMethodSupported('fetchAuthToken')
+                // console.log('fetchAuthToken method supported = ' + res)
+                // sdk.fetchAuthToken().then((res2) => {
+                    // document.getElementById('authTokenOutput').textContent = JSON.stringify(res2);
                     // request = JSON.stringify(
                     //     {"request": 
                     //     btoa(
@@ -150,10 +159,10 @@
                     // );
                     // document.getElementById('requestOptions').value = request;
                     // document.getElementById('headers').value = JSON.stringify({"X-CLIENT-ID":"ABHIBUS","X-CLIENT-TYPE":"MERCHANT","X-AUTHORIZED-FOR-ID":"ABHIBUS","merchantId":"ABHIBUS"})
-                }).catch((err) => {
-                    document.getElementById('authTokenOutput').textContent = err;
-                })
-            })
+            //     }).catch((err) => {
+            //         document.getElementById('authTokenOutput').textContent = err;
+            //     })
+            // })
         })
 
         document.getElementById('pay').addEventListener('click', async () => {
