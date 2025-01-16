@@ -135,7 +135,7 @@
         })
 
         document.getElementById('authToken').addEventListener('click', async () => {
-            PhonePe.PhonePe.build(env).then((sdk) => {
+            PhonePe.PhonePe.build(PhonePe.Constants.Species.web).then((sdk) => {
                 let res = sdk.isMethodSupported('fetchAuthToken')
                 console.log('fetchAuthToken method supported = ' + res)
                 sdk.fetchAuthToken().then((res2) => {
