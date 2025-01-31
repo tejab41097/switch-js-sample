@@ -62,6 +62,26 @@
         }
     </script>
     <script>
+
+        function displayQueryParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const paramsDisplay = document.getElementById('query-param-display');
+
+            if (urlParams.toString()) {
+                urlParams.forEach((value, key) => {
+                    const paramElement = document.createElement('div');
+                    paramElement.textContent = `${key}: ${value}`;
+                    paramsDisplay.appendChild(paramElement);
+                });
+            } else {
+                paramsDisplay.textContent = 'Query Parameters: None provided';
+            }
+        }
+
+
+        displayQueryParams();
+    </script>
+    <script>
         function triggerSmsObserver() {
             window.location.href = 'irctc_merchant.html';
             // Android.startListeningToIncomingMessages()
