@@ -63,23 +63,14 @@
     </script>
     <script>
 
-        function displayQueryParams() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const paramsDisplay = document.getElementById('query-param-display');
+    window.onload = function displayQueryParams() {
+        console.log("displayQueryParams:");
+        const params = new URLSearchParams(window.location.search);
 
-            if (urlParams.toString()) {
-                urlParams.forEach((value, key) => {
-                    const paramElement = document.createElement('div');
-                    paramElement.textContent = `${key}: ${value}`;
-                    paramsDisplay.appendChild(paramElement);
-                });
-            } else {
-                paramsDisplay.textContent = 'Query Parameters: None provided';
-            }
+        for (const [key, value] of params){
+            console.log(key + ': ' + value);
         }
-
-
-        displayQueryParams();
+    }
     </script>
     <script>
         function triggerSmsObserver() {
@@ -196,56 +187,56 @@
         }
 
 
-        document.getElementById('fetchButton').addEventListener('click', async () => {
-            document.getElementById('logOutput').textContent = "";
-            // Get input values
-            const baseUrl = document.getElementById('baseUrl').value.trim();
-            const apiEndpoint = document.getElementById('apiEndpoint').value.trim();
-            const headersText = document.getElementById('headers').value.trim();
-            const requestOptionsText = document.getElementById('requestOptions').value.trim();
+        // document.getElementById('fetchButton').addEventListener('click', async () => {
+        //     document.getElementById('logOutput').textContent = "";
+        //     // Get input values
+        //     const baseUrl = document.getElementById('baseUrl').value.trim();
+        //     const apiEndpoint = document.getElementById('apiEndpoint').value.trim();
+        //     const headersText = document.getElementById('headers').value.trim();
+        //     const requestOptionsText = document.getElementById('requestOptions').value.trim();
 
-            // Parse headers and request options from JSON
-            let headers = {};
-            let requestOptions = {};
-            try {
-                headers = JSON.parse(headersText);
-                requestOptions = JSON.parse(requestOptionsText);
-            } catch (e) {
-                document.getElementById('responseOutput').textContent = 'Error parsing JSON: ' + e.message;
-                return;
-            }
+        //     // Parse headers and request options from JSON
+        //     let headers = {};
+        //     let requestOptions = {};
+        //     try {
+        //         headers = JSON.parse(headersText);
+        //         requestOptions = JSON.parse(requestOptionsText);
+        //     } catch (e) {
+        //         document.getElementById('responseOutput').textContent = 'Error parsing JSON: ' + e.message;
+        //         return;
+        //     }
 
-            try {
-                // Construct the full URL
-                const url = `${baseUrl}${apiEndpoint}`;
-                document.getElementById('logOutput').textContent = document.getElementById('logOutput').textContent + "\n" + url;
+        //     try {
+        //         // Construct the full URL
+        //         const url = `${baseUrl}${apiEndpoint}`;
+        //         document.getElementById('logOutput').textContent = document.getElementById('logOutput').textContent + "\n" + url;
 
-                // Define the request options
-                const options = {
-                    method: 'POST',
-                    body: requestOptions
-                };
-                document.getElementById('logOutput').textContent = document.getElementById('logOutput').textContent + "\n" + JSON.stringify(options);
+        //         // Define the request options
+        //         const options = {
+        //             method: 'POST',
+        //             body: requestOptions
+        //         };
+        //         document.getElementById('logOutput').textContent = document.getElementById('logOutput').textContent + "\n" + JSON.stringify(options);
 
 
-                // Make the request
-                const response = await fetch(url, options);
+        //         // Make the request
+        //         const response = await fetch(url, options);
 
-                // Check if the response is okay
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
+        //         // Check if the response is okay
+        //         if (!response.ok) {
+        //             throw new Error(`HTTP error! status: ${response.status}`);
+        //         }
 
-                // Parse the response JSON
-                const data = await response.json();
+        //         // Parse the response JSON
+        //         const data = await response.json();
 
-                // Display the response data
-                document.getElementById('responseOutput').textContent = JSON.stringify(data, null, 2);
-            } catch (error) {
-                // Handle any errors
-                document.getElementById('responseOutput').textContent = 'Error fetching data: ' + error.message;
-            }
-        });
+        //         // Display the response data
+        //         document.getElementById('responseOutput').textContent = JSON.stringify(data, null, 2);
+        //     } catch (error) {
+        //         // Handle any errors
+        //         document.getElementById('responseOutput').textContent = 'Error fetching data: ' + error.message;
+        //     }
+        // });
     </script>
 </body>
 
