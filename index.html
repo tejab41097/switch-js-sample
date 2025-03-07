@@ -35,7 +35,11 @@
 
     <button onclick=triggerSmsObserver()>Navigate to IRCTC dummy page</button>
 
+    <button id="captureVideo" >Capture Video</button>
+    <video id="myVideo" width="320" height="240" controls></video>
+
     <button id="downloadBtn1">Download pdf</button>
+
     <script>
     document.getElementById('downloadBtn1').addEventListener('click', function () {
         // URL of the image to be downloaded
@@ -74,11 +78,31 @@
     </script>
     <script>
         function triggerSmsObserver() {
-            window.location.href = 'irctc_merchant.html';
-            // Android.startListeningToIncomingMessages()
+            console.log("triggerSmsObserver:");
         }
-    
+        function setVideoSrc(videoPath) {
+            document.getElementById("myVideo").src = videoPath;
+        }
     </script>
+
+<script>
+    function captureVideo() {
+        let env = PhonePe.Constants.Species.web
+            PhonePe.PhonePe.build(env).then((sdk) => {
+                let res = sdk.isMethodSupported('startVideo')
+                console.log('startVideo method supported = ' + res)
+                sdk.startVideo().then((res2) => {
+                    console.log('res2 = ' + res2)
+                    document.getElementById("myVideo").src = res2.uri;
+                    alert(res2)
+                }).catch((err) => {
+                    console.log('fetchGrantToken with error = ' + err)
+                    alert('fetchGrantToken error = ' + JSON.stringify(err))
+                })
+            })
+    }
+
+</script>
 
     <script src="./lib/bundle.js"></script>
     <h1>Switch Standard Integration steps</h1>
@@ -142,6 +166,22 @@
             PhonePe.PhonePe.loggingEnabled = true
             PhonePe.PhonePe.build(PhonePe.Constants.Species.web, document.getElementById("osName").value).then((sdk) => {
                     document.getElementById('initSdkOutput').textContent = sdk.isMethodSupported('getSupportedWebSDKVersion');
+            })
+        })
+
+        document.getElementById('captureVideo').addEventListener('click', async () => {
+            let env = PhonePe.Constants.Species.web
+            PhonePe.PhonePe.build(env).then((sdk) => {
+                let res = sdk.isMethodSupported('startVideo')
+                console.log('startVideo method supported = ' + res)
+                sdk.startVideo().then((res2) => {
+                    console.log('res2 = ' + res2)
+                    document.getElementById("myVideo").src = res2.uri;
+                    alert(res2)
+                }).catch((err) => {
+                    console.log('fetchGrantToken with error = ' + err)
+                    alert('fetchGrantToken error = ' + JSON.stringify(err))
+                })
             })
         })
 
