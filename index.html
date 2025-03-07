@@ -158,6 +158,21 @@
             })
         })
 
+        document.getElementById('captureFile').addEventListener('change', async (event) => {
+            PhonePe.PhonePe.build(PhonePe.Constants.Species.web).then((sdk) => {
+                let res = sdk.isMethodSupported('startVideo')
+                console.log('startVideo method supported = ' + res)
+                sdk.startVideo().then((res2) => {
+                    const videoURL = URL.createObjectURL(res2.uri)
+                    alert('res2 = ' + videoURL)
+                    document.getElementById("videoPreview").src = videoURL
+                }).catch((err) => {
+                    console.log('fetchGrantToken with error = ' + err)
+                    alert('fetchGrantToken error = ' + JSON.stringify(err))
+                })
+            })
+        })
+
         document.getElementById('captureImage').addEventListener('click', async () => {
             PhonePe.PhonePe.build(PhonePe.Constants.Species.web).then((sdk) => {
                 let res = sdk.isMethodSupported('startCamera')
