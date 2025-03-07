@@ -36,6 +36,8 @@
     <button onclick=triggerSmsObserver()>Navigate to IRCTC dummy page</button>
 
     <button id="captureVideo" >Capture Video</button>
+    <button id="captureImage" >Capture Image</button>
+
     <video id="myVideo" width="320" height="240" controls></video>
 
     <button id="downloadBtn1">Download pdf</button>
@@ -170,13 +172,25 @@
         })
 
         document.getElementById('captureVideo').addEventListener('click', async () => {
-            let env = PhonePe.Constants.Species.web
-            PhonePe.PhonePe.build(env).then((sdk) => {
+            PhonePe.PhonePe.build(PhonePe.Constants.Species.web).then((sdk) => {
                 let res = sdk.isMethodSupported('startVideo')
                 console.log('startVideo method supported = ' + res)
                 sdk.startVideo().then((res2) => {
                     console.log('res2 = ' + res2)
                     document.getElementById("myVideo").src = res2.uri;
+                    alert(res2)
+                }).catch((err) => {
+                    console.log('fetchGrantToken with error = ' + err)
+                    alert('fetchGrantToken error = ' + JSON.stringify(err))
+                })
+            })
+        })
+
+        document.getElementById('captureImage').addEventListener('click', async () => {
+            PhonePe.PhonePe.build(PhonePe.Constants.Species.web).then((sdk) => {
+                let res = sdk.isMethodSupported('startCamera')
+                console.log('startCamera method supported = ' + res)
+                sdk.startCamera().then((res2) => {
                     alert(res2)
                 }).catch((err) => {
                     console.log('fetchGrantToken with error = ' + err)
