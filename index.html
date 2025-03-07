@@ -35,8 +35,10 @@
 
     <button onclick=triggerSmsObserver()>Navigate to IRCTC dummy page</button>
 
-    <button id="captureVideo" >Capture Video</button>
+    <button id="captureVideo" >Capture Image</button>
     <button id="captureImage" >Capture Image</button>
+    <input type="file" accept="video/*" capture="user" id="captureFile">
+    <video id="videoPreview" controls></video>
 
     <video id="myVideo" width="320" height="240" controls></video>
 
@@ -78,33 +80,6 @@
         }
     }
     </script>
-    <script>
-        function triggerSmsObserver() {
-            console.log("triggerSmsObserver:");
-        }
-        function setVideoSrc(videoPath) {
-            document.getElementById("myVideo").src = videoPath;
-        }
-    </script>
-
-<script>
-    function captureVideo() {
-        let env = PhonePe.Constants.Species.web
-            PhonePe.PhonePe.build(env).then((sdk) => {
-                let res = sdk.isMethodSupported('startVideo')
-                console.log('startVideo method supported = ' + res)
-                sdk.startVideo().then((res2) => {
-                    console.log('res2 = ' + res2)
-                    document.getElementById("myVideo").src = res2.uri;
-                    alert(res2)
-                }).catch((err) => {
-                    console.log('fetchGrantToken with error = ' + err)
-                    alert('fetchGrantToken error = ' + JSON.stringify(err))
-                })
-            })
-    }
-
-</script>
 
     <script src="./lib/bundle.js"></script>
     <h1>Switch Standard Integration steps</h1>
@@ -176,9 +151,9 @@
                 let res = sdk.isMethodSupported('startVideo')
                 console.log('startVideo method supported = ' + res)
                 sdk.startVideo().then((res2) => {
-                    console.log('res2 = ' + res2)
-                    document.getElementById("myVideo").src = res2.uri;
-                    alert(res2)
+                    const videoURL = URL.createObjectURL(res2.uri)
+                    alert('res2 = ' + videoURL)
+                    document.getElementById("videoPreview").src = videoURL
                 }).catch((err) => {
                     console.log('fetchGrantToken with error = ' + err)
                     alert('fetchGrantToken error = ' + JSON.stringify(err))
@@ -223,7 +198,6 @@
         document.getElementById('pay').addEventListener('click', async () => {
             window.open(document.getElementById("paymentUrl").value,"_self");
         })
-
 
         function fetchGrantToken() {
             let env = PhonePe.Constants.Species.web
