@@ -100,7 +100,11 @@
     <input type="text" id="paymentUrl" placeholder="phone.pe:checkoutResolve//reservationId">
     <hr style="height:2px;border-width:0;color:gray;background-color:gray">
     <button id="pay">Pay</button>
-
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" id="videoUpload" name="video" accept="video/*">
+        <div id="fileDetails"></div> <button type="submit">Upload</button>
+      </form>
+      <div id="status"></div>
 
     <!-- <label for="baseUrl">Base URL:</label>
     <input type="text" id="baseUrl" placeholder="https://api.example.com">
@@ -148,23 +152,10 @@
                 let res = sdk.isMethodSupported('startVideo')
                 console.log('startVideo method supported = ' + res)
                 sdk.startVideo().then((res2) => {
+                    alert('res2.uri = ' + res2.uri)
                     const videoURL = URL.createObjectURL(res2.uri)
                     alert('res2 = ' + videoURL)
-                    document.getElementById("videoPreview").src = videoURL
-                }).catch((err) => {
-                    console.log('fetchGrantToken with error = ' + err)
-                    alert('fetchGrantToken error = ' + JSON.stringify(err))
-                })
-            })
-        })
-
-        document.getElementById('captureFile').addEventListener('change', async (event) => {
-            PhonePe.PhonePe.build(PhonePe.Constants.Species.web).then((sdk) => {
-                let res = sdk.isMethodSupported('startVideo')
-                console.log('startVideo method supported = ' + res)
-                sdk.startVideo().then((res2) => {
-                    const videoURL = URL.createObjectURL(res2.uri)
-                    alert('res2 = ' + videoURL)
+                    console.log(event)
                     document.getElementById("videoPreview").src = videoURL
                 }).catch((err) => {
                     console.log('fetchGrantToken with error = ' + err)
@@ -225,6 +216,66 @@
                 })
             })
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+  const fileInput = document.getElementById('videoUpload');
+  const uploadForm = document.getElementById('uploadForm');
+  const fileDetailsDiv = document.getElementById('fileDetails'); // Add a div for details
+  const statusDiv = document.getElementById('status');
+
+  if (fileInput && uploadForm && fileDetailsDiv) {
+
+    fileInput.addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        // Access file details
+        const fileName = file.name;
+        const fileSize = file.size; // in bytes
+        const fileType = file.type;
+
+        // Display file details
+        fileDetailsDiv.innerHTML = `
+          <p>Name: ${fileName}</p>
+          <p>Size: ${fileSize} bytes</p>
+          <p>Type: ${fileType}</p>
+        `;
+      } else {
+        fileDetailsDiv.innerHTML = ''; // Clear details if no file selected
+      }
+    });
+
+    uploadForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const file = fileInput.files[0];
+      if (file) {
+        statusDiv.textContent = 'Uploading...';
+        const formData = new FormData(uploadForm);
+
+        fetch('/upload', {
+          method: 'POST',
+          body: formData,
+        })
+        .then(response => {
+          if (response.ok) {
+            return response.text();
+          } else {
+            throw new Error('Upload failed.');
+          }
+        })
+        .then(data => {
+          statusDiv.textContent = 'Upload successful: ' + data;
+        })
+        .catch(error => {
+          console.error('Upload error:', error);
+          statusDiv.textContent = 'Upload error: ' + error.message;
+        });
+      } else {
+        statusDiv.textContent = 'Please select a video file.';
+      }
+    });
+  }
+});
 
 
         // document.getElementById('fetchButton').addEventListener('click', async () => {
