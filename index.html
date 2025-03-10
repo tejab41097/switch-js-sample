@@ -35,18 +35,15 @@
     <h1>Switch Standard Integration steps</h1>
 
     <button onclick=triggerSmsObserver()>Navigate to IRCTC dummy page</button>
-
-    <form id="uploadForm" enctype="multipart/form-data">
-        <input type="file" capture="user" id="fileUpload">
-        <input type="file" id="videoUpload" name="video" accept="video/*">
-        <input type="file" id="imageUpload" name="image" accept="image/*">
-        <div id="fileDetails"></div> 
-        <div id="fileDetails2"></div> 
-        <div id="fileDetails3"></div> 
-       <button type="submit">Upload</button>
+    <input type="file" capture="user" id="fileUpload">
+    <input type="file" id="videoUpload" name="video" accept="video/*">
+    <input type="file" id="imageUpload" name="image" accept="image/*">
+    <!-- <form id="uploadForm" enctype="multipart/form-data">
+        
+        <div id="fileDetails"></div> <button type="submit">Upload</button>
       </form>
       <div id="status"></div>
-    <br>
+    <br> -->
     <button id="downloadBtn1">Download pdf</button>
 
     <script>
@@ -219,13 +216,13 @@
             })
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        // document.addEventListener('DOMContentLoaded', function() {
   const fileInput = document.getElementById('videoUpload');
   const uploadForm = document.getElementById('uploadForm');
   const fileDetailsDiv = document.getElementById('fileDetails'); 
   const statusDiv = document.getElementById('status');
 
-  if (uploadForm && fileDetailsDiv) {
+  if (fileInput && uploadForm && fileDetailsDiv) {
 
     fileInput.addEventListener('change', function(event) {
       const file = event.target.files[0];
