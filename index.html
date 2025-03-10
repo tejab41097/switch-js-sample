@@ -32,18 +32,13 @@
 </head>
 
 <body>
-    <h1>Switch Standard Integration steps</h1>
 
     <button onclick=triggerSmsObserver()>Navigate to IRCTC dummy page</button>
-    <input type="file" capture="user" id="fileUpload">
-    <input type="file" id="videoUpload" name="video" accept="video/*">
-    <input type="file" id="imageUpload" name="image" accept="image/*">
-    <!-- <form id="uploadForm" enctype="multipart/form-data">
-        
-        <div id="fileDetails"></div> <button type="submit">Upload</button>
-      </form>
-      <div id="status"></div>
-    <br> -->
+
+    <button id="captureVideo" >Capture Video</button>
+    <button id="captureImage" >Capture Image</button>
+    <input type="file" accept="video/*" capture="user" id="captureFile">
+    <video id="videoPreview" controls></video>
     <button id="downloadBtn1">Download pdf</button>
 
     <script>
@@ -84,6 +79,7 @@
     </script>
 
     <script src="./lib/bundle.js"></script>
+    <h1>Switch Standard Integration steps</h1>
     <pre id="logger"></pre>
 
     <label for="baseUrl">Base URL:</label>
@@ -104,6 +100,11 @@
     <input type="text" id="paymentUrl" placeholder="phone.pe:checkoutResolve//reservationId">
     <hr style="height:2px;border-width:0;color:gray;background-color:gray">
     <button id="pay">Pay</button>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" id="videoUpload" name="video" accept="video/*">
+        <div id="fileDetails"></div> <button type="submit">Upload</button>
+      </form>
+      <div id="status"></div>
 
     <!-- <label for="baseUrl">Base URL:</label>
     <input type="text" id="baseUrl" placeholder="https://api.example.com">
@@ -216,10 +217,10 @@
             })
         }
 
-        // document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function() {
   const fileInput = document.getElementById('videoUpload');
   const uploadForm = document.getElementById('uploadForm');
-  const fileDetailsDiv = document.getElementById('fileDetails'); 
+  const fileDetailsDiv = document.getElementById('fileDetails'); // Add a div for details
   const statusDiv = document.getElementById('status');
 
   if (fileInput && uploadForm && fileDetailsDiv) {
@@ -234,7 +235,7 @@
 
         // Display file details
         fileDetailsDiv.innerHTML = `
-          <p>1Name: ${fileName}</p>
+          <p>Name: ${fileName}</p>
           <p>Size: ${fileSize} bytes</p>
           <p>Type: ${fileType}</p>
         `;
