@@ -35,11 +35,15 @@
 
     <button onclick=triggerSmsObserver()>Navigate to IRCTC dummy page</button>
 
-    <button id="captureVideo" >Capture Video</button>
-    <button id="captureImage" >Capture Image</button>
-    <input type="file" accept="video/*" capture="user" id="captureFile">
-    <video id="videoPreview" controls></video>
     <button id="downloadBtn1">Download pdf</button>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" capture="user" id="captureFile">
+        <input type="file" id="videoUpload" name="video" accept="video/*">
+        <input type="file" id="imageUpload" name="image" accept="image/*">
+        <input type="file" id="audioUpload" name="audio" accept="audio/*">
+        <div id="fileDetails"></div> <button type="submit">Upload</button>
+      </form>
+      <div id="status"></div>
 
     <script>
     document.getElementById('downloadBtn1').addEventListener('click', function () {
@@ -100,11 +104,6 @@
     <input type="text" id="paymentUrl" placeholder="phone.pe:checkoutResolve//reservationId">
     <hr style="height:2px;border-width:0;color:gray;background-color:gray">
     <button id="pay">Pay</button>
-    <form id="uploadForm" enctype="multipart/form-data">
-        <input type="file" id="videoUpload" name="video" accept="video/*">
-        <div id="fileDetails"></div> <button type="submit">Upload</button>
-      </form>
-      <div id="status"></div>
 
     <!-- <label for="baseUrl">Base URL:</label>
     <input type="text" id="baseUrl" placeholder="https://api.example.com">
