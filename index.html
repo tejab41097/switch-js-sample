@@ -44,6 +44,7 @@
         <!-- <div id="fileDetails"></div> <button type="submit">Upload</button>
       </form>
       <div id="status"></div> -->
+      <video id="videoPreview" controls></video>
 
     <script>
     document.getElementById('downloadBtn1').addEventListener('click', function () {
@@ -238,6 +239,19 @@
           <p>Size: ${fileSize} bytes</p>
           <p>Type: ${fileType}</p>
         `;
+        const videoPreview = document.getElementById('videoPreview');
+        const videoURL = URL.createObjectURL(file);
+        videoPreview.src = videoURL;
+
+        videoPreview.addEventListener('loadedmetadata', () => {
+        const duration = videoPreview.duration;
+        console.log('Video duration:', duration, 'seconds');
+
+        alert("Video Duration: " + duration + " seconds");
+
+        URL.revokeObjectURL(videoURL); // Clean up
+        });
+
       } else {
         fileDetailsDiv.innerHTML = ''; // Clear details if no file selected
       }
