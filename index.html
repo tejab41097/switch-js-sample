@@ -37,14 +37,22 @@
 
     <button id="downloadBtn1">Download pdf</button>
     <form id="uploadForm" enctype="multipart/form-data">
-        <input type="file" id="videoUpload" name="video" accept="video/*">
-        <input type="file" accept="video/*" capture="user" id="captureFile">
+        <label>File Picker:</label>
+        <input type="file" id="captureFile" name="video" value="File Picker" accept="video/*">
+        <br>
+        <label>Video Uploader:</label>
+        <input type="file" accept="video/*" capture="user" value="Video Uploader" id="videoUpload">
+        <video id="videoPreview"  width="640" height="480" controls></video>
+        <div id="fileDetails"></div>
+        <br>
+        <label>Image Uploader:</label>
         <input type="file" capture="user" id="imageUpload" name="image" accept="image/*">
+        <br>
+        <label>Audio Uploader: Not supported*</label>
         <input type="file" id="audioUpload" name="audio" accept="audio/*">
-         <div id="fileDetails"></div> <button type="submit">Upload</button>
+        <button type="submit">Upload</button>
       </form>
       <div id="status"></div>
-      <video id="videoPreview" controls></video>
 
     <script>
     document.getElementById('downloadBtn1').addEventListener('click', function () {
@@ -147,36 +155,6 @@
             })
         })
 
-        document.getElementById('captureVideo').addEventListener('click', async () => {
-            PhonePe.PhonePe.build(PhonePe.Constants.Species.web).then((sdk) => {
-                let res = sdk.isMethodSupported('startVideo')
-                console.log('startVideo method supported = ' + res)
-                sdk.startVideo().then((res2) => {
-                    alert('res2.uri = ' + res2.uri)
-                    const videoURL = URL.createObjectURL(res2.uri)
-                    alert('res2 = ' + videoURL)
-                    console.log(event)
-                    document.getElementById("videoPreview").src = videoURL
-                }).catch((err) => {
-                    console.log('fetchGrantToken with error = ' + err)
-                    alert('fetchGrantToken error = ' + JSON.stringify(err))
-                })
-            })
-        })
-
-        document.getElementById('captureImage').addEventListener('click', async () => {
-            PhonePe.PhonePe.build(PhonePe.Constants.Species.web).then((sdk) => {
-                let res = sdk.isMethodSupported('startCamera')
-                console.log('startCamera method supported = ' + res)
-                sdk.startCamera().then((res2) => {
-                    alert(res2)
-                }).catch((err) => {
-                    console.log('fetchGrantToken with error = ' + err)
-                    alert('fetchGrantToken error = ' + JSON.stringify(err))
-                })
-            })
-        })
-
         document.getElementById('authToken').addEventListener('click', async () => {
             PhonePe.PhonePe.build(PhonePe.Constants.Species.web).then((sdk) => {
                 let res = sdk.isMethodSupported('fetchAuthToken')
@@ -244,11 +222,7 @@
         videoPreview.src = videoURL;
 
         videoPreview.addEventListener('loadedmetadata', () => {
-        const duration = videoPreview.duration;
-        console.log('Video duration:', duration, 'seconds');
-
-        alert("Video Duration: " + duration + " seconds");
-
+        fileDetailsDiv.innerHTML +=`Video duration: ${videoPreview.duration} seconds'`
         URL.revokeObjectURL(videoURL); // Clean up
         });
 
