@@ -32,14 +32,18 @@
 </head>
 
 <body>
+    <h1>Switch Standard Integration steps</h1>
 
     <button onclick=triggerSmsObserver()>Navigate to IRCTC dummy page</button>
 
     <form id="uploadForm" enctype="multipart/form-data">
-        <input type="file" capture="user" accept="*/*" id="fileUpload">
+        <input type="file" capture="user" id="fileUpload">
         <input type="file" id="videoUpload" name="video" accept="video/*">
         <input type="file" id="imageUpload" name="image" accept="image/*">
-        <div id="fileDetails"></div> <button type="submit">Upload</button>
+        <div id="fileDetails"></div> 
+        <div id="fileDetails2"></div> 
+        <div id="fileDetails3"></div> 
+       <button type="submit">Upload</button>
       </form>
       <div id="status"></div>
     <br>
@@ -83,7 +87,6 @@
     </script>
 
     <script src="./lib/bundle.js"></script>
-    <h1>Switch Standard Integration steps</h1>
     <pre id="logger"></pre>
 
     <label for="baseUrl">Base URL:</label>
@@ -218,10 +221,8 @@
 
         document.addEventListener('DOMContentLoaded', function() {
   const fileInput = document.getElementById('videoUpload');
-  const fileInput2 = document.getElementById('imageUpload');
-  const fileInput3 = document.getElementById('fileUpload');
   const uploadForm = document.getElementById('uploadForm');
-  const fileDetailsDiv = document.getElementById('fileDetails'); // Add a div for details
+  const fileDetailsDiv = document.getElementById('fileDetails'); 
   const statusDiv = document.getElementById('status');
 
   if (uploadForm && fileDetailsDiv) {
@@ -237,44 +238,6 @@
         // Display file details
         fileDetailsDiv.innerHTML = `
           <p>1Name: ${fileName}</p>
-          <p>Size: ${fileSize} bytes</p>
-          <p>Type: ${fileType}</p>
-        `;
-      } else {
-        fileDetailsDiv.innerHTML = ''; // Clear details if no file selected
-      }
-    });
-
-    fileInput2.addEventListener('change', function(event) {
-      const file = event.target.files[0];
-      if (file) {
-        // Access file details
-        const fileName = file.name;
-        const fileSize = file.size; // in bytes
-        const fileType = file.type;
-
-        // Display file details
-        fileDetailsDiv.innerHTML = `
-          <p>2Name: ${fileName}</p>
-          <p>Size: ${fileSize} bytes</p>
-          <p>Type: ${fileType}</p>
-        `;
-      } else {
-        fileDetailsDiv.innerHTML = ''; // Clear details if no file selected
-      }
-    });
-
-    fileInput3.addEventListener('change', function(event) {
-      const file = event.target.files[0];
-      if (file) {
-        // Access file details
-        const fileName = file.name;
-        const fileSize = file.size; // in bytes
-        const fileType = file.type;
-
-        // Display file details
-        fileDetailsDiv.innerHTML = `
-          <p>3Name: ${fileName}</p>
           <p>Size: ${fileSize} bytes</p>
           <p>Type: ${fileType}</p>
         `;
