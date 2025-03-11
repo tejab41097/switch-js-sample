@@ -207,28 +207,60 @@
                 console.log('seekPermission method supported = ' + res)
 
                 sdk.seekPermission([location]).then((data) => {
-                    console.log('Successfully got permission for location')
-                }).catch((err) =>{
-                  let res = sdk.isMethodSupported('openSettingsPageForPermission')
-                console.log('openSettingsPageForPermission method supported = ' + res)
+                  console.log('Receieved response from seekPermission: '+location)
 
-                sdk.openSettingsPageForPermission().then(() => {
-                    console.log('Successfully opened settings page')
-                })
+                    if(data.permissionGranted){
+                      console.log('Successfully got permission for location')
+
+                    }else if(data.willShowPermissionAlertAgain){
+                      openSettingsPage(sdk);
+                    }else{
+                      console.log('Permission denied temporarily.')
+
+                    }
+                }).catch((err) =>{
+                 
                 })
             }).catch((err) => {
                 console.log('Failed to fetch permission with error = ' + err)
             })
         }
 
-        function openSettingsPage() {
+        function seekCameraPermission() {
             let env = PhonePe.Constants.Species.web
+            let camera = PhonePe.Constants.Permission.CAMERA
 
             PhonePe.PhonePe.build(env, document.getElementById("osName").value).then((sdk) => {
-                
+
+                let res = sdk.isMethodSupported('seekPermission')
+                console.log('seekPermission method supported = ' + res)
+
+                sdk.seekPermission([camera]).then((data) => {
+                  console.log('Receieved response from seekPermission: '+camera)
+
+                    if(data.permissionGranted){
+                      console.log('Successfully got permission for camera')
+
+                    }else if(data.willShowPermissionAlertAgain){
+                      openSettingsPage(sdk);
+                    }else{
+                      console.log('Permission denied temporarily.')
+
+                    }
+                }).catch((err) =>{
+                 
+                })
             }).catch((err) => {
-                console.log('Failed to open settings page with error = ' + err)
+                console.log('Failed to fetch permission with error = ' + err)
             })
+        }
+
+        function openSettingsPage(sdk){
+          let isSupported = sdk.isMethodSupported('openSettingsPageForPermission')
+                console.log('openSettingsPageForPermission method supported = ' + isSupported)
+                sdk.openSettingsPageForPermission().then(() => {
+                    console.log('Successfully opened settings page')
+                })
         }
 
         const imageInput = document.getElementById('imageUpload');
