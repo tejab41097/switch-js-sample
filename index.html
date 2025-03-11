@@ -34,6 +34,7 @@
 <body>
 
     <button onclick=triggerSmsObserver()>Navigate to IRCTC dummy page</button>
+    <button onclick=seekLocationPermission()>Location Permission</button>
 
     <button id="downloadBtn1">Download pdf</button>
     <form id="uploadForm" enctype="multipart/form-data">
@@ -193,6 +194,40 @@
                     console.log('fetchGrantToken with error = ' + err)
                     alert('fetchGrantToken error = ' + JSON.stringify(err))
                 })
+            })
+        }
+
+        function seekLocationPermission() {
+            let env = PhonePe.Constants.Species.web
+            let location = PhonePe.Constants.Permission.LOCATION
+
+            PhonePe.PhonePe.build(env, document.getElementById("osName").value).then((sdk) => {
+
+                let res = sdk.isMethodSupported('seekPermission')
+                console.log('seekPermission method supported = ' + res)
+
+                sdk.seekPermission([location]).then((data) => {
+                    console.log('Successfully got permission for location')
+                }).catch((err) =>{
+                  let res = sdk.isMethodSupported('openSettingsPageForPermission')
+                console.log('openSettingsPageForPermission method supported = ' + res)
+
+                sdk.openSettingsPageForPermission().then(() => {
+                    console.log('Successfully opened settings page')
+                })
+                })
+            }).catch((err) => {
+                console.log('Failed to fetch permission with error = ' + err)
+            })
+        }
+
+        function openSettingsPage() {
+            let env = PhonePe.Constants.Species.web
+
+            PhonePe.PhonePe.build(env, document.getElementById("osName").value).then((sdk) => {
+                
+            }).catch((err) => {
+                console.log('Failed to open settings page with error = ' + err)
             })
         }
 
