@@ -47,6 +47,7 @@
         <br>
         <label>Image Uploader:</label>
         <input type="file" capture="user" id="imageUpload" name="image" accept="image/*">
+        <img id="imagePreview" src="#" alt="Image Preview" style="max-width: 300px; max-height: 300px; display: none;">
         <br>
         <label>Audio Uploader: Not supported*</label>
         <input type="file" id="audioUpload" name="audio" accept="audio/*">
@@ -194,6 +195,27 @@
                 })
             })
         }
+
+        const imageInput = document.getElementById('imageUpload');
+const imagePreview = document.getElementById('imagePreview');
+
+imageInput.addEventListener('change', function() {
+  const file = this.files[0]; // Get the selected file
+
+  if (file) {
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+      imagePreview.src = e.target.result; // Set the image source
+      imagePreview.style.display = 'block'; // Show the image preview
+    };
+
+    reader.readAsDataURL(file); // Read the file as a data URL
+  } else {
+    imagePreview.src = '#'; // Clear the preview if no file is selected
+    imagePreview.style.display = 'none'; // Hide the preview
+  }
+});
 
         document.addEventListener('DOMContentLoaded', function() {
   const fileInput = document.getElementById('videoUpload');
