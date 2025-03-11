@@ -208,16 +208,15 @@
                 console.log('seekPermission method supported = ' + res)
 
                 sdk.seekPermission([location]).then((data) => {
-                  console.log('Receieved response from seekPermission: '+location)
+                  console.log('Receieved response from seekPermission: '+data)
 
                     if(data.permissionGranted){
                       console.log('Successfully got permission for location')
 
                     }else if(data.willShowPermissionAlertAgain){
-                      openSettingsPage(sdk);
-                    }else{
                       console.log('Permission denied temporarily.')
-
+                    }else{
+                      openSettingsPage(sdk);
                     }
                 }).catch((err) =>{
                  
@@ -237,16 +236,14 @@
                 console.log('seekPermission method supported = ' + res)
 
                 sdk.seekPermission([camera]).then((data) => {
-                  console.log('Receieved response from seekPermission: '+camera)
+                  console.log('Receieved response from seekPermission: '+data)
 
                     if(data.permissionGranted){
                       console.log('Successfully got permission for camera')
-
                     }else if(data.willShowPermissionAlertAgain){
-                      openSettingsPage(sdk);
-                    }else{
                       console.log('Permission denied temporarily.')
-
+                    }else{
+                      openSettingsPage(sdk);
                     }
                 }).catch((err) =>{
                  
