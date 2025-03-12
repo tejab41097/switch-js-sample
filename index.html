@@ -208,7 +208,7 @@
                 console.log('seekPermission method supported = ' + res)
 
                 sdk.seekPermission([location]).then((data) => {
-                  console.log('Receieved response from seekPermission: '+data)
+                  console.log('Receieved response from seekPermission: '+JSON.stringify(data))
 
                     if(data[0].permissionGranted){
                       console.log('Successfully got permission for location')
@@ -229,14 +229,15 @@
         function seekCameraPermission() {
             let env = PhonePe.Constants.Species.web
             let camera = PhonePe.Constants.Permission.CAMERA
+            let audio = PhonePe.Constants.Permission.RECORD_AUDIO
 
             PhonePe.PhonePe.build(env, document.getElementById("osName").value).then((sdk) => {
 
                 let res = sdk.isMethodSupported('seekPermission')
                 console.log('seekPermission method supported = ' + res)
 
-                sdk.seekPermission([camera]).then((data) => {
-                  console.log('Receieved response from seekPermission: '+data)
+                sdk.seekPermission([camera, audio]).then((data) => {
+                  console.log('Receieved response from seekPermission: '+JSON.stringify(data))
 
                     if(data[0].permissionGranted){
                       console.log('Successfully got permission for camera')
