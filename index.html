@@ -1,356 +1,398 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Request Tool</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
 
-        label,
-        input,
-        textarea,
-        button {
-            display: block;
-            margin-bottom: 10px;
-        }
+  <title>Switch Standard Integration</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 10px;
+    }
 
-        textarea {
-            width: 100%;
-            height: 100px;
-        }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
 
-        pre {
-            background: #f0f0f0;
-            padding: 10px;
-            border: 1px solid #ccc;
-        }
-    </style>
+    .section {
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    .section h2 {
+      margin-top: 0;
+    }
+
+    .input-group {
+      margin-bottom: 15px;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .input-group input[type="text"],
+    .input-group input[type="file"] {
+      width: calc(100% - 12px);
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    .button-group {
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    button {
+      padding: 12px 15px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-bottom: 10px;
+      width: 100%;
+    }
+
+    pre {
+      background-color: #f4f4f4;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    hr {
+      height: 2px;
+      border: none;
+      background-color: #ccc;
+      margin: 20px 0;
+    }
+
+    img,
+    video {
+      max-width: 100%;
+      height: auto;
+    }
+
+    @media (min-width: 600px) {
+      .button-group {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+
+      button {
+        width: auto;
+        margin-right: 10px;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <script src="./lib/bundle.js"></script>
 
-    <button onclick=triggerSmsObserver()>Navigate to IRCTC dummy page</button>
-    <button onclick=seekLocationPermission()>Location Permission</button>
-    <button onclick=seekCameraPermission()>Camera Permission</button>
+  <h1>Switch Standard Integration steps</h1>
 
-    <button id="downloadBtn1">Download pdf</button>
-    <form id="uploadForm" enctype="multipart/form-data">
-        <label>File Picker:</label>
-        <input type="file" id="captureFile" name="video" value="File Picker" accept="video/*">
-        <br>
-        <label>Video Uploader:</label>
-        <input type="file" accept="video/*" capture="user" value="Video Uploader" id="videoUpload">
-        <video id="videoPreview"  width="640" height="480" controls></video>
-        <div id="fileDetails"></div>
-        <br>
-        <label>Image Uploader:</label>
-        <input type="file" capture="user" id="imageUpload" name="image" accept="image/*">
-        <img id="imagePreview" src="#" alt="Image Preview" style="max-width: 300px; max-height: 300px; display: none;">
-        <br>
-        <label>Audio Uploader: Not supported*</label>
-        <input type="file" id="audioUpload" name="audio" accept="audio/*">
-        <button type="submit">Upload</button>
-      </form>
-      <div id="status"></div>
+  <button onclick=triggerSmsObserver()>Navigate to IRCTC dummy page</button>
+  <button onclick=seekLocationPermission()>Location Permission</button>
+  <button onclick=seekCameraPermission()>Camera Permission</button>
 
-    <script>
-    document.getElementById('downloadBtn1').addEventListener('click', function () {
-        // URL of the image to be downloaded
-        const imageUrl = 'https://tejab41097.github.io/switch-js-sample/images/sample.pdf';
-        // Create a temporary anchor element
-                const anchor = document.createElement('a');
-                anchor.href = imageUrl;
-                anchor.download = 'sample.pdf'; // Filename for the downloaded image
+  <button id="downloadBtn1">Download pdf</button>
+  <form id="uploadForm" enctype="multipart/form-data">
+    <label>File Picker:</label>
+    <input type="file" id="captureFile" name="video" value="File Picker" accept="video/*">
+    <br>
+    <label>Video Uploader:</label>
+    <input type="file" accept="video/*" capture="user" value="Video Uploader" id="videoUpload">
+    <video id="videoPreview" width="640" height="480" controls></video>
+    <div id="fileDetails"></div>
+    <br>
+    <label>Image Uploader:</label>
+    <input type="file" capture="user" id="imageUpload" name="image" accept="image/*">
+    <img id="imagePreview" src="#" alt="Image Preview" style="max-width: 300px; max-height: 300px; display: none;">
+    <br>
+    <label>Audio Uploader: Not supported*</label>
+    <input type="file" id="audioUpload" name="audio" accept="audio/*">
+    <button type="submit">Upload</button>
+  </form>
+  <div id="status"></div>
 
-                // Append the anchor to the body
-                document.body.appendChild(anchor);
 
-                // Trigger the download by simulating a click
-                anchor.click();
+  <pre id="logger"></pre>
 
-                // Remove the anchor from the document
-                document.body.removeChild(anchor);       
-        });
-    </script>
-    <script type="text/javascript">
-        function startDownload() {
-            // Simulate a download link (can be any file type like PDF, MP3, etc.)
-            window.location.href = "https://pdfobject.com/pdf/sample.pdf";
-        }
-    </script>
-    <script>
+  <label for="baseUrl">Base URL:</label>
+  <input type="text" id="osName" placeholder="android or iOS">
 
+
+  <button id="initSdk">Init SDK</button>
+  <h2>Init SDK Output:</h2>
+  <pre id="initSdkOutput"></pre>
+  <button id="authToken">Fetch Auth Token</button>
+  <h2>Auth Token Output:</h2>
+  <pre id="authTokenOutput"></pre>
+  <input type="text" id="paymentUrl" placeholder="phone.pe:checkoutResolve//reservationId">
+  <button id="pay">Pay</button>
+
+  <script>
     window.onload = function displayQueryParams() {
-        console.log("displayQueryParams:");
-        const params = new URLSearchParams(window.location.search);
+      console.log("displayQueryParams:");
+      const params = new URLSearchParams(window.location.search);
 
-        for (const [key, value] of params){
-            console.log(key + ': ' + value);
-        }
+      for (const [key, value] of params) {
+        console.log(key + ': ' + value);
+      }
     }
-    </script>
+    function startDownload() {
+      // Simulate a download link (can be any file type like PDF, MP3, etc.)
+      window.location.href = "https://pdfobject.com/pdf/sample.pdf";
+    }
+    document.getElementById('downloadBtn1').addEventListener('click', function () {
+      // URL of the image to be downloaded
+      const imageUrl = 'https://tejab41097.github.io/switch-js-sample/images/sample.pdf';
+      // Create a temporary anchor element
+      const anchor = document.createElement('a');
+      anchor.href = imageUrl;
+      anchor.download = 'sample.pdf'; // Filename for the downloaded image
 
-    <script src="./lib/bundle.js"></script>
-    <h1>Switch Standard Integration steps</h1>
-    <pre id="logger"></pre>
+      // Append the anchor to the body
+      document.body.appendChild(anchor);
 
-    <label for="baseUrl">Base URL:</label>
-    <input type="text" id="osName" placeholder="android or iOS">
+      // Trigger the download by simulating a click
+      anchor.click();
 
+      // Remove the anchor from the document
+      document.body.removeChild(anchor);
+    });
 
-    <button id="initSdk">Init SDK</button>
-    <h2>Init SDK Output:</h2>
-    <pre id="initSdkOutput"></pre>
+    (function () {
+      var old = console.log;
+      var logger = document.getElementById('logger');
+      console.log = function () {
+        for (var i = 0; i < arguments.length; i++) {
+          if (typeof arguments[i] == 'object') {
+            logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(arguments[i], undefined, 2) : arguments[i]) + '<br />';
+          } else {
+            logger.innerHTML += arguments[i] + '<br />';
+          }
+        }
+      }
+    })();
 
-    <hr style="height:2px;border-width:0;color:gray;background-color:gray">
-
-    <button id="authToken">Fetch Auth Token</button>
-    <h2>Auth Token Output:</h2>
-    <pre id="authTokenOutput"></pre>
-    <hr style="height:2px;border-width:0;color:gray;background-color:gray">
-
-    <input type="text" id="paymentUrl" placeholder="phone.pe:checkoutResolve//reservationId">
-    <hr style="height:2px;border-width:0;color:gray;background-color:gray">
-    <button id="pay">Pay</button>
-
-    <!-- <label for="baseUrl">Base URL:</label>
-    <input type="text" id="baseUrl" placeholder="https://api.example.com">
-
-    <label for="apiEndpoint">API Endpoint:</label>
-    <input type="text" id="apiEndpoint" placeholder="/data">
-
-    <label for="headers">Headers (JSON format):</label>
-    <textarea id="headers" placeholder='{"Content-Type": "application/json"}'></textarea>
-
-    <label for="requestOptions">Request Options (JSON format):</label>
-    <textarea id="requestOptions" placeholder='{"method": "GET"}'></textarea>
-
-    <button id="fetchButton">Fetch Data</button> -->
-
-    <!-- <h2>Response:</h2>
-    <pre id="responseOutput"></pre>
-
-    <h2>Logs:</h2>
-    <pre id="logOutput"></pre> -->
-    <script>
-        (function () {
-            var old = console.log;
-            var logger = document.getElementById('logger');
-            console.log = function () {
-                for (var i = 0; i < arguments.length; i++) {
-                    if (typeof arguments[i] == 'object') {
-                        logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(arguments[i], undefined, 2) : arguments[i]) + '<br />';
-                    } else {
-                        logger.innerHTML += arguments[i] + '<br />';
-                    }
-                }
-            }
-        })();
-
-        document.getElementById('initSdk').addEventListener('click', async () => {
-            PhonePe.PhonePe.loggingEnabled = true
-            PhonePe.PhonePe.build(PhonePe.Constants.Species.web, document.getElementById("osName").value).then((sdk) => {
-                    document.getElementById('initSdkOutput').textContent = sdk.isMethodSupported('getSupportedWebSDKVersion');
-            })
-        })
-
-        document.getElementById('authToken').addEventListener('click', async () => {
-            PhonePe.PhonePe.build(PhonePe.Constants.Species.web).then((sdk) => {
-                let res = sdk.isMethodSupported('fetchAuthToken')
-                console.log('fetchAuthToken method supported = ' + res)
-                sdk.fetchAuthToken().then((res2) => {
-                    document.getElementById('authTokenOutput').textContent = JSON.stringify(res2);
-                    request = JSON.stringify(
-                        {"request": 
-                        btoa(
-                            JSON.stringify({ "grantToken": res2.grantToken})
-                            )
-                        }
-                    );
-                    document.getElementById('requestOptions').value = request;
-                    document.getElementById('headers').value = JSON.stringify({"X-CLIENT-ID":"ABHIBUS","X-CLIENT-TYPE":"MERCHANT","X-AUTHORIZED-FOR-ID":"ABHIBUS","merchantId":"ABHIBUS"})
-                }).catch((err) => {
-                    document.getElementById('authTokenOutput').textContent = err;
-                })
-            })
+    document.getElementById('initSdk').addEventListener('click', async () => {
+      PhonePe.PhonePe.loggingEnabled = true
+      PhonePe.PhonePe.build(PhonePe.Constants.Species.web, document.getElementById("osName").value).then((sdk) => {
+        document.getElementById('initSdkOutput').textContent = sdk.isMethodSupported('getSupportedWebSDKVersion');
+      })
     })
 
-        document.getElementById('pay').addEventListener('click', async () => {
-            window.open(document.getElementById("paymentUrl").value,"_self");
+    document.getElementById('authToken').addEventListener('click', async () => {
+      PhonePe.PhonePe.build(PhonePe.Constants.Species.web).then((sdk) => {
+        let res = sdk.isMethodSupported('fetchAuthToken')
+        console.log('fetchAuthToken method supported = ' + res)
+        sdk.fetchAuthToken().then((res2) => {
+          document.getElementById('authTokenOutput').textContent = JSON.stringify(res2);
+          request = JSON.stringify(
+            {
+              "request":
+                btoa(
+                  JSON.stringify({ "grantToken": res2.grantToken })
+                )
+            }
+          );
+          document.getElementById('requestOptions').value = request;
+          document.getElementById('headers').value = JSON.stringify({ "X-CLIENT-ID": "ABHIBUS", "X-CLIENT-TYPE": "MERCHANT", "X-AUTHORIZED-FOR-ID": "ABHIBUS", "merchantId": "ABHIBUS" })
+        }).catch((err) => {
+          document.getElementById('authTokenOutput').textContent = err;
         })
+      })
+    })
 
-        function fetchGrantToken() {
-            let env = PhonePe.Constants.Species.web
-            PhonePe.PhonePe.build(env).then((sdk) => {
-                let res = sdk.isMethodSupported('fetchGrantToken')
-                console.log('fetchGrantToken method supported = ' + res)
-                sdk.fetchGrantToken().then((res2) => {
-                    console.log('res2 = ' + res2)
-                    alert(res2)
-                }).catch((err) => {
-                    console.log('fetchGrantToken with error = ' + err)
-                    alert('fetchGrantToken error = ' + JSON.stringify(err))
-                })
-            })
+    document.getElementById('pay').addEventListener('click', async () => {
+      window.open(document.getElementById("paymentUrl").value, "_self");
+    })
+
+    function fetchGrantToken() {
+      let env = PhonePe.Constants.Species.web
+      PhonePe.PhonePe.build(env).then((sdk) => {
+        let res = sdk.isMethodSupported('fetchGrantToken')
+        console.log('fetchGrantToken method supported = ' + res)
+        sdk.fetchGrantToken().then((res2) => {
+          console.log('res2 = ' + res2)
+          alert(res2)
+        }).catch((err) => {
+          console.log('fetchGrantToken with error = ' + err)
+          alert('fetchGrantToken error = ' + JSON.stringify(err))
+        })
+      })
+    }
+
+    function seekLocationPermission() {
+      let env = PhonePe.Constants.Species.web
+      let location = PhonePe.Constants.Permission.LOCATION
+
+      PhonePe.PhonePe.build(env, document.getElementById("osName").value).then((sdk) => {
+        let res = sdk.isMethodSupported('seekPermission')
+        console.log('seekPermission method supported = ' + res)
+
+        sdk.seekPermission([location]).then((data) => {
+          console.log('Receieved response from seekPermission: ' + JSON.stringify(data))
+
+          if (data[0].permissionGranted) {
+            console.log('Successfully got permission for location')
+          } else if (!data[0].willShowPermissionAlertAgain) {
+            console.log('Permission denied.')
+            let isSupported = sdk.isMethodSupported('openSettingsPageForPermission')
+      console.log('openSettingsPageForPermission method supported = ' + isSupported)
+      sdk.openSettingsPageForPermission().then(() => {
+        console.log('Successfully opened settings page')
+      });
+          } else {
+            console.log('Permission denied temporarily.')
+          }
+        }).catch((err) => {
+
+        })
+      }).catch((err) => {
+        console.log('Failed to fetch permission with error = ' + err)
+      })
+    }
+
+    function seekCameraPermission() {
+      let env = PhonePe.Constants.Species.web
+      let camera = PhonePe.Constants.Permission.CAMERA
+      let audio = PhonePe.Constants.Permission.RECORD_AUDIO
+
+      PhonePe.PhonePe.build(env, document.getElementById("osName").value).then((sdk) => {
+
+        let res = sdk.isMethodSupported('seekPermission')
+        console.log('seekPermission method supported = ' + res)
+
+        sdk.seekPermission([camera, audio]).then((data) => {
+          console.log('Receieved response from seekPermission: ' + JSON.stringify(data))
+          for (let i = 0; i < data.length; i++) {
+              const item = data[i];
+          if (item.permissionGranted) {
+            console.log('Successfully got permission for ',item.permission)
+          } else if (!item.willShowPermissionAlertAgain) {
+            console.log('willShowPermissionAlertAgain.')
+            let isSupported = sdk.isMethodSupported('openSettingsPageForPermission')
+      console.log('openSettingsPageForPermission method supported = ' + isSupported)
+      sdk.openSettingsPageForPermission().then(() => {
+        console.log('Successfully opened settings page')
+      })
+            break;
+            console.log('Permission denied temporarily.')
+          } else {
+            break;
+          }
         }
+        }).catch((err) => {
 
-        function seekLocationPermission() {
-            let env = PhonePe.Constants.Species.web
-            let location = PhonePe.Constants.Permission.LOCATION
+        })
+      }).catch((err) => {
+        console.log('Failed to fetch permission with error = ' + err)
+      })
+    }
 
-            PhonePe.PhonePe.build(env, document.getElementById("osName").value).then((sdk) => {
+    const imageInput = document.getElementById('imageUpload');
+    const imagePreview = document.getElementById('imagePreview');
 
-                let res = sdk.isMethodSupported('seekPermission')
-                console.log('seekPermission method supported = ' + res)
+    imageInput.addEventListener('change', function () {
+      const file = this.files[0]; // Get the selected file
 
-                sdk.seekPermission([location]).then((data) => {
-                  console.log('Receieved response from seekPermission: '+JSON.stringify(data))
-
-                    if(data[0].permissionGranted){
-                      console.log('Successfully got permission for location')
-
-                    }else if(data[0].willShowPermissionAlertAgain){
-                      console.log('Permission denied temporarily.')
-                    }else{
-                      openSettingsPage(sdk);
-                    }
-                }).catch((err) =>{
-                 
-                })
-            }).catch((err) => {
-                console.log('Failed to fetch permission with error = ' + err)
-            })
-        }
-
-        function seekCameraPermission() {
-            let env = PhonePe.Constants.Species.web
-            let camera = PhonePe.Constants.Permission.CAMERA
-            let audio = PhonePe.Constants.Permission.RECORD_AUDIO
-
-            PhonePe.PhonePe.build(env, document.getElementById("osName").value).then((sdk) => {
-
-                let res = sdk.isMethodSupported('seekPermission')
-                console.log('seekPermission method supported = ' + res)
-
-                sdk.seekPermission([camera, audio]).then((data) => {
-                  console.log('Receieved response from seekPermission: '+JSON.stringify(data))
-
-                    if(data[0].permissionGranted){
-                      console.log('Successfully got permission for camera')
-                    }else if(data[0].willShowPermissionAlertAgain){
-                      console.log('Permission denied temporarily.')
-                    }else{
-                      openSettingsPage(sdk);
-                    }
-                }).catch((err) =>{
-                 
-                })
-            }).catch((err) => {
-                console.log('Failed to fetch permission with error = ' + err)
-            })
-        }
-
-        function openSettingsPage(sdk){
-          let isSupported = sdk.isMethodSupported('openSettingsPageForPermission')
-                console.log('openSettingsPageForPermission method supported = ' + isSupported)
-                sdk.openSettingsPageForPermission().then(() => {
-                    console.log('Successfully opened settings page')
-                })
-        }
-
-        const imageInput = document.getElementById('imageUpload');
-const imagePreview = document.getElementById('imagePreview');
-
-imageInput.addEventListener('change', function() {
-  const file = this.files[0]; // Get the selected file
-
-  if (file) {
-    const reader = new FileReader();
-
-    reader.onload = function(e) {
-      imagePreview.src = e.target.result; // Set the image source
-      imagePreview.style.display = 'block'; // Show the image preview
-    };
-
-    reader.readAsDataURL(file); // Read the file as a data URL
-  } else {
-    imagePreview.src = '#'; // Clear the preview if no file is selected
-    imagePreview.style.display = 'none'; // Hide the preview
-  }
-});
-
-        document.addEventListener('DOMContentLoaded', function() {
-  const fileInput = document.getElementById('videoUpload');
-  const uploadForm = document.getElementById('uploadForm');
-  const fileDetailsDiv = document.getElementById('fileDetails'); // Add a div for details
-  const statusDiv = document.getElementById('status');
-
-  if (fileInput && uploadForm && fileDetailsDiv) {
-
-    fileInput.addEventListener('change', function(event) {
-      const file = event.target.files[0];
       if (file) {
-        // Access file details
-        const fileName = file.name;
-        const fileSize = file.size; // in bytes
-        const fileType = file.type;
+        const reader = new FileReader();
 
-        // Display file details
-        fileDetailsDiv.innerHTML = `
+        reader.onload = function (e) {
+          imagePreview.src = e.target.result; // Set the image source
+          imagePreview.style.display = 'block'; // Show the image preview
+        };
+
+        reader.readAsDataURL(file); // Read the file as a data URL
+      } else {
+        imagePreview.src = '#'; // Clear the preview if no file is selected
+        imagePreview.style.display = 'none'; // Hide the preview
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const fileInput = document.getElementById('videoUpload');
+      const uploadForm = document.getElementById('uploadForm');
+      const fileDetailsDiv = document.getElementById('fileDetails'); // Add a div for details
+      const statusDiv = document.getElementById('status');
+
+      if (fileInput && uploadForm && fileDetailsDiv) {
+
+        fileInput.addEventListener('change', function (event) {
+          const file = event.target.files[0];
+          if (file) {
+            // Access file details
+            const fileName = file.name;
+            const fileSize = file.size; // in bytes
+            const fileType = file.type;
+
+            // Display file details
+            fileDetailsDiv.innerHTML = `
           <p>Name: ${fileName}</p>
           <p>Size: ${fileSize} bytes</p>
           <p>Type: ${fileType}</p>
         `;
-        const videoPreview = document.getElementById('videoPreview');
-        const videoURL = URL.createObjectURL(file);
-        videoPreview.src = videoURL;
+            const videoPreview = document.getElementById('videoPreview');
+            const videoURL = URL.createObjectURL(file);
+            videoPreview.src = videoURL;
 
-        videoPreview.addEventListener('loadedmetadata', () => {
-        fileDetailsDiv.innerHTML +=`Video duration: ${videoPreview.duration} seconds'`
-        URL.revokeObjectURL(videoURL); // Clean up
-        });
+            videoPreview.addEventListener('loadedmetadata', () => {
+              fileDetailsDiv.innerHTML += `Video duration: ${videoPreview.duration} seconds'`
+              URL.revokeObjectURL(videoURL); // Clean up
+            });
 
-      } else {
-        fileDetailsDiv.innerHTML = ''; // Clear details if no file selected
-      }
-    });
-
-    uploadForm.addEventListener('submit', function(event) {
-      event.preventDefault();
-
-      const file = fileInput.files[0];
-      if (file) {
-        statusDiv.textContent = 'Uploading...';
-        const formData = new FormData(uploadForm);
-
-        fetch('/upload', {
-          method: 'POST',
-          body: formData,
-        })
-        .then(response => {
-          if (response.ok) {
-            return response.text();
           } else {
-            throw new Error('Upload failed.');
+            fileDetailsDiv.innerHTML = ''; // Clear details if no file selected
           }
-        })
-        .then(data => {
-          statusDiv.textContent = 'Upload successful: ' + data;
-        })
-        .catch(error => {
-          console.error('Upload error:', error);
-          statusDiv.textContent = 'Upload error: ' + error.message;
         });
-      } else {
-        statusDiv.textContent = 'Please select a video file.';
+
+        uploadForm.addEventListener('submit', function (event) {
+          event.preventDefault();
+
+          const file = fileInput.files[0];
+          if (file) {
+            statusDiv.textContent = 'Uploading...';
+            const formData = new FormData(uploadForm);
+
+            fetch('/upload', {
+              method: 'POST',
+              body: formData,
+            })
+              .then(response => {
+                if (response.ok) {
+                  return response.text();
+                } else {
+                  throw new Error('Upload failed.');
+                }
+              })
+              .then(data => {
+                statusDiv.textContent = 'Upload successful: ' + data;
+              })
+              .catch(error => {
+                console.error('Upload error:', error);
+                statusDiv.textContent = 'Upload error: ' + error.message;
+              });
+          } else {
+            statusDiv.textContent = 'Please select a video file.';
+          }
+        });
       }
     });
-  }
-});
 
 
         // document.getElementById('fetchButton').addEventListener('click', async () => {
@@ -403,7 +445,7 @@ imageInput.addEventListener('change', function() {
         //         document.getElementById('responseOutput').textContent = 'Error fetching data: ' + error.message;
         //     }
         // });
-    </script>
+  </script>
 </body>
 
 </html>
