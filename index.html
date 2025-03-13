@@ -104,7 +104,7 @@
   <h1>Switch Standard Integration steps</h1>
 
   <button onclick=triggerSmsObserver()>Navigate to IRCTC dummy page</button>
-  <button onclick=seekLocationPermission()>Location Permission</button>
+  
   <button onclick=seekCameraPermission()>Camera Permission</button>
 
   <button id="downloadBtn1">Download pdf</button>
@@ -142,6 +142,13 @@
   <pre id="authTokenOutput"></pre>
   <input type="text" id="paymentUrl" placeholder="phone.pe:checkoutResolve//reservationId">
   <button id="pay">Pay</button>
+  <br>
+  <button onclick=seekLocationPermission()>Location Permission</button>
+  <button onclick=getCurrentLocation()>Get Current Location</button>
+  <button onclick=startUpdatingLocation()>Start Location Update</button>
+  <button onclick=stopUpdatingLocation()>Stop Location Update</button>
+
+  <br>
 
   <script>
     window.onload = function displayQueryParams() {
@@ -235,6 +242,75 @@
         })
       })
     }
+
+  
+    function startUpdatingLocation() {
+            PhonePe.PhonePe.build(PhonePe.Constants.Species.web, document.getElementById("osName").value).then((sdk) => {
+                let res = sdk.isMethodSupported('startUpdatingLocation')
+                console.log('startUpdatingLocation method supported = ' + res)
+                sdk.startUpdatingLocation()
+                registerLocationUpdateSuccessCallback()
+                registerLocationUpdateFailureCallback()
+            }).catch((err) => {
+                console.log('Error caught when initializing PhonePe = ' + err)
+            })
+
+        }
+
+        function stopUpdatingLocation() {
+            PhonePe.PhonePe.build(PhonePe.Constants.Species.web, document.getElementById("osName").value).then((sdk) => {
+                let res = sdk.isMethodSupported('stopUpdatingLocation')
+                console.log('stopUpdatingLocation method supported = ' + res)
+                sdk.stopUpdatingLocation()
+                
+            }).catch((err) => {
+                console.log('Error caught when initializing PhonePe = ' + err)
+            }).catch((err) => {
+                console.log('Error caught when initializing PhonePe = ' + err)
+            })
+
+        }
+
+        function registerLocationUpdateSuccessCallback() {
+            PhonePe.PhonePe.build(PhonePe.Constants.Species.web,document.getElementById("osName").value).then((sdk) => {
+
+                sdk.registerLocationUpdateSuccessCallback('callbackName', (response) => {
+                    console.log('Location success response = ' + JSON.stringify(response))
+                })
+            }).catch((err) => {
+                console.log('Error caught when initializing PhonePe = ' + err)
+            })
+
+        }
+
+        function registerLocationUpdateFailureCallback() {
+            PhonePe.PhonePe.build(PhonePe.Constants.Species.web, document.getElementById("osName").value).then((sdk) => {
+                sdk.registerLocationUpdateFailureCallback('callbackName', (response) => {
+                    console.log('Location failure response = ' + JSON.stringify(response))
+                })
+            }).catch((err) => {
+                console.log('Error caught when initializing PhonePe = ' + err)
+            })
+
+        }
+
+        function getCurrentLocation() {
+            console.log('Trying to get current location')
+            PhonePe.PhonePe.build(PhonePe.Constants.Species.web, document.getElementById("osName").value).then((sdk) => {
+
+                let res = sdk.isMethodSupported('getCurrentLocation')
+                console.log('getCurrentLocation method supported = ' + res)
+
+                sdk.getCurrentLocation().then((location) => {
+                    console.log("location received on js side = " + location)
+                }).catch((err) => {
+                    console.log("Error found when fetching location = " + err)
+                })
+            }).catch((err) => {
+                console.log('Error caught when initializing PhonePe = ' + err)
+            })
+
+        }
 
     function seekLocationPermission() {
       let env = PhonePe.Constants.Species.web
