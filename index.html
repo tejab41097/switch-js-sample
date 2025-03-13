@@ -104,7 +104,7 @@
   <h1>Switch Standard Integration steps</h1>
 
   <button onclick=triggerSmsObserver()>Navigate to IRCTC dummy page</button>
-  
+
   <button onclick=seekCameraPermission()>Camera Permission</button>
 
   <button id="downloadBtn1">Download pdf</button>
@@ -126,7 +126,7 @@
     <button type="submit">Upload</button>
   </form>
   <div id="status"></div>
-
+  <button onclick=startJSCamera()>Start Video Capture</button>
 
   <pre id="logger"></pre>
 
@@ -243,74 +243,74 @@
       })
     }
 
-  
+
     function startUpdatingLocation() {
-            PhonePe.PhonePe.build(PhonePe.Constants.Species.web, document.getElementById("osName").value).then((sdk) => {
-                let res = sdk.isMethodSupported('startUpdatingLocation')
-                console.log('startUpdatingLocation method supported = ' + res)
-                sdk.startUpdatingLocation()
-                registerLocationUpdateSuccessCallback()
-                registerLocationUpdateFailureCallback()
-            }).catch((err) => {
-                console.log('Error caught when initializing PhonePe = ' + err)
-            })
+      PhonePe.PhonePe.build(PhonePe.Constants.Species.web, document.getElementById("osName").value).then((sdk) => {
+        let res = sdk.isMethodSupported('startUpdatingLocation')
+        console.log('startUpdatingLocation method supported = ' + res)
+        sdk.startUpdatingLocation()
+        registerLocationUpdateSuccessCallback()
+        registerLocationUpdateFailureCallback()
+      }).catch((err) => {
+        console.log('Error caught when initializing PhonePe = ' + err)
+      })
 
-        }
+    }
 
-        function stopUpdatingLocation() {
-            PhonePe.PhonePe.build(PhonePe.Constants.Species.web, document.getElementById("osName").value).then((sdk) => {
-                let res = sdk.isMethodSupported('stopUpdatingLocation')
-                console.log('stopUpdatingLocation method supported = ' + res)
-                sdk.stopUpdatingLocation()
-                
-            }).catch((err) => {
-                console.log('Error caught when initializing PhonePe = ' + err)
-            }).catch((err) => {
-                console.log('Error caught when initializing PhonePe = ' + err)
-            })
+    function stopUpdatingLocation() {
+      PhonePe.PhonePe.build(PhonePe.Constants.Species.web, document.getElementById("osName").value).then((sdk) => {
+        let res = sdk.isMethodSupported('stopUpdatingLocation')
+        console.log('stopUpdatingLocation method supported = ' + res)
+        sdk.stopUpdatingLocation()
 
-        }
+      }).catch((err) => {
+        console.log('Error caught when initializing PhonePe = ' + err)
+      }).catch((err) => {
+        console.log('Error caught when initializing PhonePe = ' + err)
+      })
 
-        function registerLocationUpdateSuccessCallback() {
-            PhonePe.PhonePe.build(PhonePe.Constants.Species.web,document.getElementById("osName").value).then((sdk) => {
+    }
 
-                sdk.registerLocationUpdateSuccessCallback('callbackName', (response) => {
-                    console.log('Location success response = ' + JSON.stringify(response))
-                })
-            }).catch((err) => {
-                console.log('Error caught when initializing PhonePe = ' + err)
-            })
+    function registerLocationUpdateSuccessCallback() {
+      PhonePe.PhonePe.build(PhonePe.Constants.Species.web, document.getElementById("osName").value).then((sdk) => {
 
-        }
+        sdk.registerLocationUpdateSuccessCallback('callbackName', (response) => {
+          console.log('Location success response = ' + JSON.stringify(response))
+        })
+      }).catch((err) => {
+        console.log('Error caught when initializing PhonePe = ' + err)
+      })
 
-        function registerLocationUpdateFailureCallback() {
-            PhonePe.PhonePe.build(PhonePe.Constants.Species.web, document.getElementById("osName").value).then((sdk) => {
-                sdk.registerLocationUpdateFailureCallback('callbackName', (response) => {
-                    console.log('Location failure response = ' + JSON.stringify(response))
-                })
-            }).catch((err) => {
-                console.log('Error caught when initializing PhonePe = ' + err)
-            })
+    }
 
-        }
+    function registerLocationUpdateFailureCallback() {
+      PhonePe.PhonePe.build(PhonePe.Constants.Species.web, document.getElementById("osName").value).then((sdk) => {
+        sdk.registerLocationUpdateFailureCallback('callbackName', (response) => {
+          console.log('Location failure response = ' + JSON.stringify(response))
+        })
+      }).catch((err) => {
+        console.log('Error caught when initializing PhonePe = ' + err)
+      })
 
-        function getCurrentLocation() {
-            console.log('Trying to get current location')
-            PhonePe.PhonePe.build(PhonePe.Constants.Species.web, document.getElementById("osName").value).then((sdk) => {
+    }
 
-                let res = sdk.isMethodSupported('getCurrentLocation')
-                console.log('getCurrentLocation method supported = ' + res)
+    function getCurrentLocation() {
+      console.log('Trying to get current location')
+      PhonePe.PhonePe.build(PhonePe.Constants.Species.web, document.getElementById("osName").value).then((sdk) => {
 
-                sdk.getCurrentLocation().then((location) => {
-                    console.log("location received on js side = " + location)
-                }).catch((err) => {
-                    console.log("Error found when fetching location = " + err)
-                })
-            }).catch((err) => {
-                console.log('Error caught when initializing PhonePe = ' + err)
-            })
+        let res = sdk.isMethodSupported('getCurrentLocation')
+        console.log('getCurrentLocation method supported = ' + res)
 
-        }
+        sdk.getCurrentLocation().then((location) => {
+          console.log("location received on js side = " + location)
+        }).catch((err) => {
+          console.log("Error found when fetching location = " + err)
+        })
+      }).catch((err) => {
+        console.log('Error caught when initializing PhonePe = ' + err)
+      })
+
+    }
 
     function seekLocationPermission() {
       let env = PhonePe.Constants.Species.web
@@ -328,10 +328,10 @@
           } else if (!data[0].willShowPermissionAlertAgain) {
             console.log('Permission denied.')
             let isSupported = sdk.isMethodSupported('openSettingsPageForPermission')
-      console.log('openSettingsPageForPermission method supported = ' + isSupported)
-      sdk.openSettingsPageForPermission().then(() => {
-        console.log('Successfully opened settings page')
-      });
+            console.log('openSettingsPageForPermission method supported = ' + isSupported)
+            sdk.openSettingsPageForPermission().then(() => {
+              console.log('Successfully opened settings page')
+            });
           } else {
             console.log('Permission denied temporarily.')
           }
@@ -356,22 +356,22 @@
         sdk.seekPermission([camera, audio]).then((data) => {
           console.log('Receieved response from seekPermission: ' + JSON.stringify(data))
           for (let i = 0; i < data.length; i++) {
-              const item = data[i];
-          if (item.permissionGranted) {
-            console.log('Successfully got permission for ',item.permission)
-          } else if (!item.willShowPermissionAlertAgain) {
-            console.log('willShowPermissionAlertAgain.')
-            let isSupported = sdk.isMethodSupported('openSettingsPageForPermission')
-      console.log('openSettingsPageForPermission method supported = ' + isSupported)
-      sdk.openSettingsPageForPermission().then(() => {
-        console.log('Successfully opened settings page')
-      })
-            break;
-            console.log('Permission denied temporarily.')
-          } else {
-            break;
+            const item = data[i];
+            if (item.permissionGranted) {
+              console.log('Successfully got permission for ', item.permission)
+            } else if (!item.willShowPermissionAlertAgain) {
+              console.log('willShowPermissionAlertAgain.')
+              let isSupported = sdk.isMethodSupported('openSettingsPageForPermission')
+              console.log('openSettingsPageForPermission method supported = ' + isSupported)
+              sdk.openSettingsPageForPermission().then(() => {
+                console.log('Successfully opened settings page')
+              })
+              break;
+              console.log('Permission denied temporarily.')
+            } else {
+              break;
+            }
           }
-        }
         }).catch((err) => {
 
         })
@@ -470,6 +470,18 @@
       }
     });
 
+    function startJSCamera() {
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function (stream) {
+          // Stream is available, display it in a <video> element
+          const video = document.getElementById('videoPreview');
+          video.srcObject = stream;
+          video.play();
+        })
+        .catch(function (error) {
+          console.error('Error accessing camera:', error);
+        });
+    }
 
         // document.getElementById('fetchButton').addEventListener('click', async () => {
         //     document.getElementById('logOutput').textContent = "";
