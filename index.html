@@ -576,8 +576,8 @@
       console.error("JSON Parsing Error:", error);
     }
   }
-
-   class MessagingHandler{
+  
+ class MessagingHandler{
     static callback(callbackName, resolved, data, error) {
       console.log('PhonePe', 'phonepeCallback called! with callbackName = ' + callbackName)
       console.log('PhonePe', 'phonepeCallback resolved:' + resolved)
@@ -591,6 +591,45 @@
       //   })
     }
   }
+</script>
+
+<script type="module">
+  // --- Define PhonePe and MessagingHandler (as in previous example) ---
+  // class MessagingHandlerBase {
+  //   static callback(callbackName, resolved, data, error) {
+      
+  //   }
+  // }
+
+  // class MessagingHandler extends MessagingHandlerBase {}
+
+  // class PhonePe {
+  //   static MessagingHandler = MessagingHandler;
+  // }
+
+  // // --- Mocking within the Script Tag ---
+  // console.log("--- Mocking PhonePe.MessagingHandler.callback ---");
+
+  // // 1. Store the original method
+  // const originalCallback = PhonePe.MessagingHandler.callback;
+
+  // 2. Define your mock implementation
+  PhonePe.MessagingHandler.callback = function(callbackName, resolved, data, error) {
+    console.log('PhonePe', 'phonepeCallback called! with callbackName = ' + callbackName)
+      console.log('PhonePe', 'phonepeCallback resolved:' + resolved)
+      console.log('PhonePe', 'phonepeCallback data = ' + data)
+      console.log('PhonePe', 'phonepeCallback error = ' + error)
+  };
+
+  // 3. Call the mocked method
+  // const result = PhonePe.MessagingHandler.callback("mocked argument");
+  // console.log("Result from mocked callback:", result);
+
+  // // 4. Restore the original method (optional, but good practice for isolated tests)
+  // PhonePe.MessagingHandler.callback = originalCallback;
+
+  // console.log("--- After restoring original callback ---");
+  // PhonePe.MessagingHandler.callback("after restore"); // This will call the original again
 </script>
 </body>
 
