@@ -570,7 +570,7 @@
       resultElement.textContent = jsonString;
       console.log("Base URL:", baseUrl);
       console.log("Converted String:", jsonString);
-      
+      window['JSNetworkBridge'].processRequest(jsonString);
     } catch (error) {
       resultElement.textContent = "Error: Invalid JSON format";
       console.error("JSON Parsing Error:", error);
