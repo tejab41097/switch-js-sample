@@ -533,6 +533,65 @@
         //     }
         // });
   </script>
+
+<h1>Convert JSON to String</h1>
+
+<div>
+  <label for="jsonBody">JSON Body (including baseUrl):</label><br>
+  <textarea id="jsonBody" name="jsonBody" rows="5" cols="50" placeholder="Enter JSON here (must include 'baseUrl' property)">{"baseUrl":"https://apicp2testing.phonepe.com/apis/garfield/v1/init/1234","callbackId":"networkCallbackId"}</textarea>
+</div>
+<br>
+<button onclick="convertJsonToString()">Convert to String</button>
+<br><br>
+<div>
+  <strong>Resulting String:</strong>
+  <pre id="result"></pre>
+</div>
+
+<script>
+  function convertJsonToString() {
+    const jsonInput = document.getElementById("jsonBody").value;
+    const resultElement = document.getElementById("result");
+
+    try {
+      const jsonObject = JSON.parse(jsonInput);
+
+      if (!jsonObject.baseUrl) {
+        resultElement.textContent = "Error: 'baseUrl' property is missing in the JSON.";
+        console.error("Error: 'baseUrl' property is missing in the JSON.");
+        return;
+      }
+
+      const baseUrl = jsonObject.baseUrl;
+      // Remove baseUrl from the object before stringifying if you don't want it in the final string
+      // delete jsonObject.baseUrl;
+
+      const jsonString = JSON.stringify(jsonObject, null, 2); // Use null and 2 for pretty printing
+      resultElement.textContent = jsonString;
+      console.log("Base URL:", baseUrl);
+      console.log("Converted String:", jsonString);
+      
+    } catch (error) {
+      resultElement.textContent = "Error: Invalid JSON format";
+      console.error("JSON Parsing Error:", error);
+    }
+  }
+
+   class MessagingHandler{
+    static callback(callbackName, resolved, data, error) {
+      console.log('PhonePe', 'phonepeCallback called! with callbackName = ' + callbackName)
+      console.log('PhonePe', 'phonepeCallback resolved:' + resolved)
+      console.log('PhonePe', 'phonepeCallback data = ' + data)
+      console.log('PhonePe', 'phonepeCallback error = ' + error)
+
+      //   MessagingHandler.networkCallbackId.then((sdk) => {
+      //   console.log('method callback = ' + resolved + ' data' + data)
+      // }).catch((err) => {
+       
+      //   })
+    }
+  }
+</script>
 </body>
 
 </html>
