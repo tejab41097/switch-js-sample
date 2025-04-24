@@ -577,20 +577,20 @@
     }
   }
   
- class MessagingHandler{
-    static callback(callbackName, resolved, data, error) {
-      console.log('PhonePe', 'phonepeCallback called! with callbackName = ' + callbackName)
-      console.log('PhonePe', 'phonepeCallback resolved:' + resolved)
-      console.log('PhonePe', 'phonepeCallback data = ' + data)
-      console.log('PhonePe', 'phonepeCallback error = ' + error)
+//  class MessagingHandler{
+//     static callback(callbackName, resolved, data, error) {
+//       console.log('PhonePe', 'phonepeCallback called! with callbackName = ' + callbackName)
+//       console.log('PhonePe', 'phonepeCallback resolved:' + resolved)
+//       console.log('PhonePe', 'phonepeCallback data = ' + data)
+//       console.log('PhonePe', 'phonepeCallback error = ' + error)
 
-      //   MessagingHandler.networkCallbackId.then((sdk) => {
-      //   console.log('method callback = ' + resolved + ' data' + data)
-      // }).catch((err) => {
+//       //   MessagingHandler.networkCallbackId.then((sdk) => {
+//       //   console.log('method callback = ' + resolved + ' data' + data)
+//       // }).catch((err) => {
        
-      //   })
-    }
-  }
+//       //   })
+//     }
+//   }
 </script>
 
 <script type="module">
@@ -614,12 +614,12 @@
   // const originalCallback = PhonePe.MessagingHandler.callback;
 
   // 2. Define your mock implementation
-  PhonePe.MessagingHandler.callback = function(callbackName, resolved, data, error) {
-    console.log('PhonePe', 'phonepeCallback called! with callbackName = ' + callbackName)
-      console.log('PhonePe', 'phonepeCallback resolved:' + resolved)
-      console.log('PhonePe', 'phonepeCallback data = ' + data)
-      console.log('PhonePe', 'phonepeCallback error = ' + error)
-  };
+  // PhonePe.MessagingHandler.callback = function(callbackName, resolved, data, error) {
+  //   console.log('PhonePe', 'phonepeCallback called! with callbackName = ' + callbackName)
+  //     console.log('PhonePe', 'phonepeCallback resolved:' + resolved)
+  //     console.log('PhonePe', 'phonepeCallback data = ' + data)
+  //     console.log('PhonePe', 'phonepeCallback error = ' + error)
+  // };
 
   // 3. Call the mocked method
   // const result = PhonePe.MessagingHandler.callback("mocked argument");
