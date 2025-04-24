@@ -143,6 +143,9 @@
   <input type="text" id="paymentUrl" placeholder="phone.pe:checkoutResolve//reservationId">
   <button id="pay">Pay</button>
   <br>
+  <input type="text" id="redirectUrl" placeholder="www.google.com">
+  <button id="redirect">Redirect Me</button>
+  <br>
   <button onclick=seekLocationPermission()>Location Permission</button>
   <button onclick=getCurrentLocation()>Get Current Location</button>
   <button onclick=startUpdatingLocation()>Start Location Update</button>
@@ -226,7 +229,9 @@
     document.getElementById('pay').addEventListener('click', async () => {
       window.open(document.getElementById("paymentUrl").value, "_self");
     })
-
+    document.getElementById('redirect').addEventListener('click', async () => {
+      window.location.href = document.getElementById("redirectUrl").value;
+    })
     function fetchGrantToken() {
       let env = PhonePe.Constants.Species.web
       PhonePe.PhonePe.build(env).then((sdk) => {
