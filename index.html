@@ -150,6 +150,7 @@
   <button onclick=getCurrentLocation()>Get Current Location</button>
   <button onclick=startUpdatingLocation()>Start Location Update</button>
   <button onclick=stopUpdatingLocation()>Stop Location Update</button>
+  <button onclick=closeApp()>Close App</button>
 
   <br>
 
@@ -161,6 +162,11 @@
       for (const [key, value] of params) {
         console.log(key + ': ' + value);
       }
+    }
+    function closeApp(){
+      PhonePe.PhonePe.build(PhonePe.Constants.Species.web, document.getElementById("osName").value).then((sdk) => {
+        sdk.closeApp();
+      })
     }
     function startDownload() {
       // Simulate a download link (can be any file type like PDF, MP3, etc.)
