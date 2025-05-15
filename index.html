@@ -164,9 +164,9 @@
       }
     }
     function closeApp(){
-      PhonePe.PhonePe.build(PhonePe.Constants.Species.web, document.getElementById("osName").value).then((sdk) => {
-        sdk.closeApp();
-      })
+      PhonePe.PhonePe.build(env).then((sdk) => {
+        sdk.closeApp()
+      });
     }
     function startDownload() {
       // Simulate a download link (can be any file type like PDF, MP3, etc.)
@@ -272,7 +272,7 @@
         let res = sdk.isMethodSupported('stopUpdatingLocation')
         console.log('stopUpdatingLocation method supported = ' + res)
         sdk.stopUpdatingLocation()
-
+        sdk.closeApp()
       }).catch((err) => {
         console.log('Error caught when initializing PhonePe = ' + err)
       }).catch((err) => {
