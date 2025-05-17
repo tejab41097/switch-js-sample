@@ -101,11 +101,49 @@
 <body>
   <script src="./lib/bundle.js"></script>
 
-  <h1>Switch Standard Integration steps</h1>
-
-  <button onclick=triggerSmsObserver()>Navigate to IRCTC dummy page</button>
-
+  <h1>Jio specific Testing</h1>
+  <br>
+  <h2>Permission Bridges</h2>
+  <br>
   <button onclick=seekCameraPermission()>Camera Permission</button>
+  <br>
+  <button onclick=seekLocationPermission()>Location Permission</button>
+  <button onclick=getCurrentLocation()>Get Current Location</button>
+  <button onclick=startUpdatingLocation()>Start Location Update</button>
+  <button onclick=stopUpdatingLocation()>Stop Location Update</button>
+  <br>
+  <button onclick=closeApp()>Close App</button>
+  <br>
+
+  <h2>Network Bridge</h1>
+
+<div>
+  <label for="jsonBody">JSON Body (including baseUrl):</label><br>
+  <textarea id="jsonBody" name="jsonBody" rows="5" cols="50" placeholder="Enter JSON here (must include 'baseUrl' property)">{"baseUrl":"https://apicp2testing.phonepe.com/apis/garfield/v1/init/1234","callbackId":"networkCallbackId"}</textarea>
+</div>
+<br>
+<button onclick="callNetworkBridge()">Call Network Bridge</button>
+<br>
+<br>
+<div>
+  <strong>Resulting String:</strong>
+  <pre id="result"></pre>
+</div>
+
+<pre id="logger"></pre>
+  
+<input type="text" id="osName" placeholder="android or iOS">
+<button id="initSdk">Init SDK</button>
+
+<h2>Init SDK Output:</h2>
+<pre id="initSdkOutput"></pre>
+
+<input type="text" id="paymentUrl" placeholder="phone.pe:checkoutResolve//reservationId">
+<button id="pay">Pay</button>
+
+
+<br>
+  <h1>Switch Standard Integration steps</h1>
 
   <button id="downloadBtn1">Download pdf</button>
   <form id="uploadForm" enctype="multipart/form-data">
@@ -125,33 +163,13 @@
     <input type="file" id="audioUpload" name="audio" accept="audio/*">
     <button type="submit">Upload</button>
   </form>
+
   <div id="status"></div>
   <button onclick=startJSCamera()>Start Video Capture</button>
 
-  <pre id="logger"></pre>
-
-  <label for="baseUrl">Base URL:</label>
-  <input type="text" id="osName" placeholder="android or iOS">
-
-
-  <button id="initSdk">Init SDK</button>
-  <h2>Init SDK Output:</h2>
-  <pre id="initSdkOutput"></pre>
   <button id="authToken">Fetch Auth Token</button>
   <h2>Auth Token Output:</h2>
   <pre id="authTokenOutput"></pre>
-  <input type="text" id="paymentUrl" placeholder="phone.pe:checkoutResolve//reservationId">
-  <button id="pay">Pay</button>
-  <br>
-  <input type="text" id="redirectUrl" placeholder="www.google.com">
-  <button id="redirect">Redirect Me</button>
-  <br>
-  <button onclick=seekLocationPermission()>Location Permission</button>
-  <button onclick=getCurrentLocation()>Get Current Location</button>
-  <button onclick=startUpdatingLocation()>Start Location Update</button>
-  <button onclick=stopUpdatingLocation()>Stop Location Update</button>
-  <button onclick=closeApp()>Close App</button>
-
   <br>
 
   <script>
@@ -232,9 +250,6 @@
 
     document.getElementById('pay').addEventListener('click', async () => {
       window.open(document.getElementById("paymentUrl").value, "_self");
-    })
-    document.getElementById('redirect').addEventListener('click', async () => {
-      window.location.href = document.getElementById("redirectUrl").value;
     })
     function fetchGrantToken() {
       let env = PhonePe.Constants.Species.web
@@ -542,20 +557,6 @@
         //     }
         // });
   </script>
-
-<h1>Convert JSON to String</h1>
-
-<div>
-  <label for="jsonBody">JSON Body (including baseUrl):</label><br>
-  <textarea id="jsonBody" name="jsonBody" rows="5" cols="50" placeholder="Enter JSON here (must include 'baseUrl' property)">{"baseUrl":"https://apicp2testing.phonepe.com/apis/garfield/v1/init/1234","callbackId":"networkCallbackId"}</textarea>
-</div>
-<br>
-<button onclick="convertJsonToString()">Convert to String</button>
-<br><br>
-<div>
-  <strong>Resulting String:</strong>
-  <pre id="result"></pre>
-</div>
 
 <script>
   function convertJsonToString() {
