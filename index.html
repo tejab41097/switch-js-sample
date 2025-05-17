@@ -164,9 +164,7 @@
       }
     }
     function closeApp(){
-      PhonePe.PhonePe.build(env).then((sdk) => {
-        sdk.closeApp()
-      });
+      window.NavigationBridge.closeApp('');
     }
     function startDownload() {
       // Simulate a download link (can be any file type like PDF, MP3, etc.)
