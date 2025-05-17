@@ -179,9 +179,9 @@
 
       for (const [key, value] of params) {
         if(key == 'encstr'){
-          console.log('encstr: '+value);
-          console.log('encstr decoded: '+atob(value));
-          let transactionId = atob(value).transactionId;
+          console.log('encstr: '+ value);
+          console.log('encstr decoded: '+ atob(value));
+          let transactionId = JSON.parse(atob(value)).transactionId;
           if(transactionId == null || transactionId == 'TRANSACTION_ID'){
             console.log('User dropped off or in transaction flow as no transactionId found!'); 
           } else {
