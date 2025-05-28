@@ -364,8 +364,8 @@
             console.log('Permission denied.')
             let isSupported = sdk.isMethodSupported('openSettingsPageForPermission')
             console.log('openSettingsPageForPermission method supported = ' + isSupported)
-            sdk.openSettingsPageForPermission().then(() => {
-              console.log('Successfully opened settings page')
+            sdk.openSettingsPageForPermission().then(data => { 
+              console.log(JSON.stringify(data))
             });
           } else {
             console.log('Permission denied temporarily.')
