@@ -436,6 +436,18 @@
       }
     });
 
+    document.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'visible') {
+        // Page has come to the foreground
+        console.log('Page is visible!');
+        // Perform actions like refreshing data, resuming animations, etc.
+    } else {
+        // Page has gone to the background
+        console.log('Page is hidden!');
+        // Perform actions like pausing resource-intensive tasks, etc.
+    }
+});
+
     document.addEventListener('DOMContentLoaded', function () {
       const fileInput = document.getElementById('videoUpload');
       const uploadForm = document.getElementById('uploadForm');
