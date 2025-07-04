@@ -101,7 +101,7 @@
 <body>
   <script src="./lib/bundle.js"></script>
 
-  <h1>Jio specific Testing</h1>
+  <h1>Jio specific Testing Local</h1>
   <br>
   <h2>Permission Bridges</h2>
   <br>
@@ -173,6 +173,18 @@
   <br>
 
   <script>
+     function startJSCamera() {
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function (stream) {
+          // Stream is available, display it in a <video> element
+          const video = document.getElementById('videoPreview');
+          video.srcObject = stream;
+          video.play();
+        })
+        .catch(function (error) {
+          console.error('Error accessing camera:', error);
+        });
+    }
     window.onload = function displayQueryParams() {
       console.log("displayQueryParams:");
       const params = new URLSearchParams(window.location.search);
@@ -446,7 +458,7 @@
         console.log('Page is hidden!');
         // Perform actions like pausing resource-intensive tasks, etc.
     }
-});
+  });
 
     document.addEventListener('DOMContentLoaded', function () {
       const fileInput = document.getElementById('videoUpload');
@@ -516,19 +528,6 @@
         });
       }
     });
-
-    function startJSCamera() {
-      navigator.mediaDevices.getUserMedia({ video: true })
-        .then(function (stream) {
-          // Stream is available, display it in a <video> element
-          const video = document.getElementById('videoPreview');
-          video.srcObject = stream;
-          video.play();
-        })
-        .catch(function (error) {
-          console.error('Error accessing camera:', error);
-        });
-    }
   </script>
 
 <script>
