@@ -142,6 +142,7 @@
 <button id="pay">Pay</button>
 
 <button id="replaceUrl">Open & clear history</button>
+<button id="clearHistory">Clear history</button>
 
 <br>
   <h1>Switch Standard Integration steps</h1>
@@ -277,7 +278,11 @@
       window.open(document.getElementById("paymentUrl").value, "_self");
     })
     document.getElementById('replaceUrl').addEventListener('click', async () => {
+      window['NavigationBridge'].clearWebViewHistory()
       window.location.replace("https://apicp1testing.phonepe.com/apis/apphub/v1/render/checkoutRedirection?referenceId=A2507191026118106779984O");
+    })
+    document.getElementById('clearHistory').addEventListener('click', async () => {
+      window['NavigationBridge'].clearWebViewHistory()
     })
     
     function fetchGrantToken() {
