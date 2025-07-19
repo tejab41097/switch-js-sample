@@ -278,8 +278,8 @@
       window.open(document.getElementById("paymentUrl").value, "_self");
     })
     document.getElementById('replaceUrl').addEventListener('click', async () => {
-      window['NavigationBridge'].clearWebViewHistory()
       window.location.replace("https://apicp1testing.phonepe.com/apis/apphub/v1/render/checkoutRedirection?referenceId=A2507191026118106779984O");
+      window['NavigationBridge'].clearWebViewHistory()
     })
     document.getElementById('clearHistory').addEventListener('click', async () => {
       window['NavigationBridge'].clearWebViewHistory()
