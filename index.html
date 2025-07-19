@@ -141,6 +141,7 @@
 <input type="text" id="paymentUrl" placeholder="phone.pe:checkoutResolve//reservationId">
 <button id="pay">Pay</button>
 
+<button id="replaceUrl">Open & clear history</button>
 
 <br>
   <h1>Switch Standard Integration steps</h1>
@@ -275,6 +276,10 @@
     document.getElementById('pay').addEventListener('click', async () => {
       window.open(document.getElementById("paymentUrl").value, "_self");
     })
+    document.getElementById('replaceUrl').addEventListener('click', async () => {
+      window.location.replace("https://apicp1testing.phonepe.com/apis/apphub/v1/render/checkoutRedirection?referenceId=A2507191026118106779984O");
+    })
+    
     function fetchGrantToken() {
       let env = PhonePe.Constants.Species.web
       PhonePe.PhonePe.build(env).then((sdk) => {
