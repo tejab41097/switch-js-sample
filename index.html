@@ -276,11 +276,22 @@
       })
     })
 
+    function isAndroidDevice() {
+      const userAgent =
+        navigator.userAgent || navigator.vendor || window.opera;
+      if (/android/i.test(userAgent)) {
+        return true;
+      }
+      return false;
+    }
+
     document.getElementById('fetchAddress').addEventListener('click', async () => {
-      if(window.navigator.userAgent.indexOf("iOS") != -1){
-        window.webkit.messageHandlers["resourceGrant"].postMessage({ "callbackId": "abcd", "permissions": ["ADDRESS"] });
-      }else{
+      if(isAndroidDevice()){
+        console.log("fetchAddress android")
         window.AuthBridge.resourceGrant('{"permissions":["ADDRESS"],"callbackId":"callbackId"}');
+       }else{
+        console.log("fetchAddress iOS")
+        window.webkit.messageHandlers["resourceGrant"].postMessage({ "callbackId": "abcd", "permissions": ["ADDRESS"] });
       }
     });
 
