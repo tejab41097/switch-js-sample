@@ -170,6 +170,8 @@
   <button onclick=startJSCamera()>Start Video Capture</button>
 
   <button id="authToken">Fetch Auth Token</button>
+  <button id="fetchAddress">Fetch Address</button>
+
   <h2>Auth Token Output:</h2>
   <pre id="authTokenOutput"></pre>
   <br>
@@ -273,6 +275,14 @@
         })
       })
     })
+
+    document.getElementById('fetchAddress').addEventListener('click', async () => {
+      if(window.navigator.userAgent.indexOf("iOS") != -1){
+        window.webkit.messageHandlers["resourceGrant"].postMessage({ "callbackId": "abcd", "permissions": ["ADDRESS"] });
+      }else{
+        window.AuthBridge.resourceGrant('{"permissions":["ADDRESS"],"callbackId":"callbackId"}');
+      }
+    });
 
     document.getElementById('pay').addEventListener('click', async () => {
       window.open(document.getElementById("paymentUrl").value, "_self");
