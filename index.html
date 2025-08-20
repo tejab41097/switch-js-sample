@@ -285,15 +285,36 @@
       return false;
     }
 
+    // document.getElementById('fetchAddress').addEventListener('click', async () => {
+    //   if(isAndroidDevice()){
+    //     console.log("fetchAddress android")
+    //     window.AuthBridge.resourceGrant('{"permissions":["ADDRESS"],"callbackId":"callbackId"}');
+    //    }else{
+    //     console.log("fetchAddress iOS")
+    //     window.webkit.messageHandlers["resourceGrant"].postMessage({ "callbackId": "abcd", "permissions": ["ADDRESS"] });
+    //   }
+    // });
+
     document.getElementById('fetchAddress').addEventListener('click', async () => {
-      if(isAndroidDevice()){
-        console.log("fetchAddress android")
-        window.AuthBridge.resourceGrant('{"permissions":["ADDRESS"],"callbackId":"callbackId"}');
-       }else{
-        console.log("fetchAddress iOS")
-        window.webkit.messageHandlers["resourceGrant"].postMessage({ "callbackId": "abcd", "permissions": ["ADDRESS"] });
-      }
-    });
+      PhonePe.PhonePe.build(PhonePe.Constants.Species.web).then((sdk) => {
+        let res = sdk.isMethodSupported('fetchAddressToken')
+        console.log('fetchAddressToken method supported = ' + res)
+        sdk.fetchAuthToken().then((res2) => {
+          document.getElementById('authTokenOutput').textContent = JSON.stringify(res2);
+          request = JSON.stringify(
+            {
+              "request":
+                btoa(
+                  JSON.stringify({ "grantToken": res2.grantToken })
+                )
+            }
+          );
+          document.getElementById('authTokenOutput').value += request;
+        }).catch((err) => {
+          document.getElementById('authTokenOutput').textContent = err;
+        })
+      })
+    })
 
     document.getElementById('pay').addEventListener('click', async () => {
       window.open(document.getElementById("paymentUrl").value, "_self");
