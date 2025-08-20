@@ -300,7 +300,7 @@
       PhonePe.PhonePe.build(PhonePe.Constants.Species.web).then((sdk) => {
         let res = sdk.isMethodSupported('resourceGrant')
         console.log('fetchAddressToken method supported = ' + res)
-        sdk.fetchAuthToken().then((res2) => {
+        sdk.fetchAddressToken().then((res2) => {
           document.getElementById('authTokenOutput').textContent = JSON.stringify(res2);
           request = JSON.stringify(
             {
