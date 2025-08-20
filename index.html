@@ -296,8 +296,9 @@
     // });
 
     document.getElementById('fetchAddress').addEventListener('click', async () => {
+      console.log('fetchAddressToken method supported = ' + res)
       PhonePe.PhonePe.build(PhonePe.Constants.Species.web).then((sdk) => {
-        let res = sdk.isMethodSupported('fetchAddressToken')
+        let res = sdk.isMethodSupported('resourceGrant')
         console.log('fetchAddressToken method supported = ' + res)
         sdk.fetchAuthToken().then((res2) => {
           document.getElementById('authTokenOutput').textContent = JSON.stringify(res2);
