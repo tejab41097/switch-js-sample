@@ -171,6 +171,7 @@
 
   <button id="authToken">Fetch Auth Token</button>
   <button id="fetchAddress">Fetch Address</button>
+  <button id="fetchAddressWithoutSDK">Fetch Address Without SDK</button>
 
   <h2>Auth Token Output:</h2>
   <pre id="authTokenOutput"></pre>
@@ -285,15 +286,15 @@
       return false;
     }
 
-    // document.getElementById('fetchAddress').addEventListener('click', async () => {
-    //   if(isAndroidDevice()){
-    //     console.log("fetchAddress android")
-    //     window.AuthBridge.resourceGrant('{"permissions":["ADDRESS"],"callbackId":"callbackId"}');
-    //    }else{
-    //     console.log("fetchAddress iOS")
-    //     window.webkit.messageHandlers["resourceGrant"].postMessage({ "callbackId": "abcd", "permissions": ["ADDRESS"] });
-    //   }
-    // });
+    document.getElementById('fetchAddressWithoutSDK').addEventListener('click', async () => {
+      if(isAndroidDevice()){
+        console.log("fetchAddress android")
+        window.AuthBridge.resourceGrant('{"permissions":["ADDRESS"],"callbackId":"callbackId"}');
+       }else{
+        console.log("fetchAddress iOS")
+        window.webkit.messageHandlers["resourceGrant"].postMessage({ "callbackId": "abcd", "permissions": ["ADDRESS"] });
+      }
+    });
 
     document.getElementById('fetchAddress').addEventListener('click', async () => {
       console.log('fetchAddressToken method supported = ' + res)
