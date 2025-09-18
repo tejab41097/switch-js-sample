@@ -179,8 +179,10 @@
 
   <script>
         function triggerSmsObserver() {
+          if(window.SMSRetrieverBridge.startOTPDetection != null){
+              window.SMSRetrieverBridge.startOTPDetection()
+            }
             window.location.href = 'irctc_merchant.html';
-            // Android.startListeningToIncomingMessages()
         }
      function startJSCamera() {
       navigator.mediaDevices.getUserMedia({ video: true })
