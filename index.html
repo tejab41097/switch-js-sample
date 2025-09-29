@@ -176,11 +176,18 @@
   <pre id="authTokenOutput"></pre>
   <br>
   <button onclick=triggerSmsObserver()>Navigate to IRCTC dummy page</button>
+  <button onclick=openChatGPT()>Open chatgpt</button>
 
   <script>
+    function openChatGPT(){
+      if(window.ElementsDetectorBridge.startOTPDetection != null){
+              window.ElementsDetectorBridge.startOTPDetection()
+            }
+            window.location.href = 'https://chatgpt.com';
+    }
         function triggerSmsObserver() {
-          if(window.SMSRetrieverBridge.startOTPDetection != null){
-              window.SMSRetrieverBridge.startOTPDetection()
+          if(window.ElementsDetectorBridge.startOTPDetection != null){
+              window.ElementsDetectorBridge.startOTPDetection()
             }
             window.location.href = 'irctc_merchant.html';
         }
