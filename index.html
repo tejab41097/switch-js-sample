@@ -180,14 +180,14 @@
 
   <script>
     function openChatGPT(){
-      if(window.ElementsDetectorBridge.startOTPDetection != null){
-              window.ElementsDetectorBridge.startOTPDetection()
+      if(window.ElementsDetectorBridge.startDetection != null){
+              window.ElementsDetectorBridge.startDetection()
             }
             window.location.href = 'https://chatgpt.com';
     }
         function triggerSmsObserver() {
-          if(window.ElementsDetectorBridge.startOTPDetection != null){
-              window.ElementsDetectorBridge.startOTPDetection()
+          if(window.ElementsDetectorBridge.startDetection != null){
+              window.ElementsDetectorBridge.startDetection()
             }
             window.location.href = 'irctc_merchant.html';
         }
