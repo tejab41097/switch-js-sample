@@ -101,7 +101,6 @@
 <body>
   <script src="./lib/bundle.js"></script>
 
-  <h1>Jio specific Testing Local</h1>
   <br>
   <h2>Permission Bridges</h2>
   <br>
@@ -170,15 +169,31 @@
   <button onclick=startJSCamera()>Start Video Capture</button>
 
   <button id="authToken">Fetch Auth Token</button>
+  <button id="authTokenV2">Fetch Auth Token V2</button>
   <button id="fetchAddress">Fetch Address</button>
   <button id="fetchAddressWithoutSDK">Fetch Address Without SDK</button>
+  <button id="consentStatus">Check Consent Status</button>
 
   <h2>Auth Token Output:</h2>
   <pre id="authTokenOutput"></pre>
   <br>
+  <button onclick=triggerSmsObserver()>Navigate to IRCTC dummy page</button>
+  <button onclick=openChatGPT()>Open chatgpt</button>
 
   <script>
-     function startJSCamera() {
+    function openChatGPT(){
+      if(window.ElementsDetectorBridge.startDetection != null){
+        window.ElementsDetectorBridge.startDetection()
+      }
+      window.location.href = 'https://chatgpt.com';
+    }
+    function triggerSmsObserver() {
+      if(window.ElementsDetectorBridge.startDetection != null){
+        window.ElementsDetectorBridge.startDetection()
+      }
+      window.location.href = 'irctc_merchant.html';
+    }
+    function startJSCamera() {
       navigator.mediaDevices.getUserMedia({ video: true })
         .then(function (stream) {
           // Stream is available, display it in a <video> element
@@ -277,6 +292,23 @@
       })
     })
 
+    document.getElementById('authTokenV2').addEventListener('click', async () => {
+      PhonePe.PhonePe.build(PhonePe.Constants.Species.web).then((sdk) => {
+        let res = sdk.isMethodSupported('fetchAuthTokenV2')
+        console.log('fetchAuthTokenV2 method supported = ' + res)
+        if (!res) {
+          document.getElementById('authTokenOutput').textContent = 'fetchAuthTokenV2 not supported';
+          return;
+        }
+        const consentMessage = 'Implicit Consent Message';
+        sdk.fetchAuthTokenV2(consentMessage).then((res2) => {
+          document.getElementById('authTokenOutput').textContent = JSON.stringify(res2);
+        }).catch((err) => {
+          document.getElementById('authTokenOutput').textContent = err;
+        })
+      })
+    })
+
     function isAndroidDevice() {
       const userAgent =
         navigator.userAgent || navigator.vendor || window.opera;
@@ -297,11 +329,11 @@
     });
 
     document.getElementById('fetchAddress').addEventListener('click', async () => {
-      console.log('fetchAddressToken method supported = ' + res)
       PhonePe.PhonePe.build(PhonePe.Constants.Species.web).then((sdk) => {
         let res = sdk.isMethodSupported('resourceGrant')
         console.log('fetchAddressToken method supported = ' + res)
         sdk.fetchAddressToken().then((res2) => {
+          console.log("fetchAddressToken method supported Res 2 = " + res2);
           document.getElementById('authTokenOutput').textContent = JSON.stringify(res2);
           request = JSON.stringify(
             {
@@ -312,6 +344,22 @@
             }
           );
           document.getElementById('authTokenOutput').value += request;
+        }).catch((err) => {
+          document.getElementById('authTokenOutput').textContent = err;
+        })
+      })
+    })
+
+    document.getElementById('consentStatus').addEventListener('click', async () => {
+      PhonePe.PhonePe.build(PhonePe.Constants.Species.web).then((sdk) => {
+        const supported = sdk.isMethodSupported('isConsentGranted')
+        console.log('isConsentGranted method supported = ' + supported)
+        if (!supported) {
+          document.getElementById('authTokenOutput').textContent = 'isConsentGranted not supported';
+          return;
+        }
+        sdk.isConsentGranted().then((res2) => {
+          document.getElementById('authTokenOutput').textContent = JSON.stringify(res2);
         }).catch((err) => {
           document.getElementById('authTokenOutput').textContent = err;
         })
@@ -343,7 +391,6 @@
         })
       })
     }
-
 
     function startUpdatingLocation() {
       PhonePe.PhonePe.build(PhonePe.Constants.Species.web, document.getElementById("osName").value).then((sdk) => {
