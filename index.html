@@ -178,14 +178,19 @@
   <pre id="authTokenOutput"></pre>
   <br>
   <button onclick=triggerSmsObserver()>Navigate to IRCTC dummy page</button>
-  <button onclick=openChatGPT()>Open chatgpt</button>
+  <button onclick=saveToLocalStorage()>saveToLocalStorage</button>
+  <button onclick=saveToSessionStorage()>saveToSessionStorage</button>
 
   <script>
-    function openChatGPT(){
-      if(window.ElementsDetectorBridge.startDetection != null){
-              window.ElementsDetectorBridge.startDetection()
-            }
-            window.location.href = 'https://chatgpt.com';
+    function saveToLocalStorage(){
+      localStorage.getItem('localStorage')
+      localStorage.setItem('localStorage', new Date())
+      localStorage.getItem('localStorage')
+    }
+    function saveToSessionStorage(){
+      sessionStorage.getItem('sessionStorage')
+      sessionStorage.setItem('sessionStorage', new Date())
+      sessionStorage.getItem('sessionStorage')
     }
         function triggerSmsObserver() {
           if(window.ElementsDetectorBridge.startDetection != null){
