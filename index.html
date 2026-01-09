@@ -169,7 +169,7 @@
   <button onclick=startJSCamera()>Start Video Capture</button>
 
   <button id="authToken">Fetch Auth Token</button>
-  <button id="authTokenV2">Fetch Auth Token V2</button>
+  <button id="authTokenIfConsentRecorded">Fetch Auth Token If Consent Recorded</button>
   <button id="fetchAddress">Fetch Address</button>
   <button id="fetchAddressWithoutSDK">Fetch Address Without SDK</button>
   <button id="consentStatus">Check Consent Status</button>
@@ -280,7 +280,7 @@
       fetchAuthToken();
     })
 
-    document.getElementById('authTokenV2').addEventListener('click', async () => {
+    document.getElementById('authTokenIfConsentRecorded').addEventListener('click', async () => {
       fetchAuthTokenIfConsentRecorded();
     })
 
@@ -324,6 +324,7 @@
           return;
         }
         const consentMessage = 'Implicit Consent Message';
+        // NOTE: This API should only and only be called if consent is shown
         sdk.fetchAuthTokenIfConsentRecorded(consentMessage).then((res2) => {
           document.getElementById('authTokenOutput').textContent = JSON.stringify(res2);
         }).catch((err) => {
