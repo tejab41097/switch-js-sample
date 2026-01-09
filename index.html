@@ -281,7 +281,7 @@
     })
 
     document.getElementById('authTokenV2').addEventListener('click', async () => {
-      fetchAuthTokenV2();
+      fetchAuthTokenIfConsentRecorded();
     })
 
     function isAndroidDevice() {
@@ -314,17 +314,17 @@
       })
     }
 
-    function fetchAuthTokenV2() {
+    function fetchAuthTokenIfConsentRecorded() {
       PhonePe.PhonePe.build(PhonePe.Constants.Species.web).then((sdk) => {
-        let res = sdk.isMethodSupported('fetchAuthTokenV2')
-        console.log('fetchAuthTokenV2 method supported = ' + res)
+        let res = sdk.isMethodSupported('fetchAuthTokenIfConsentRecorded')
+        console.log('fetchAuthTokenIfConsentRecorded method supported = ' + res)
         if (!res) {
-          document.getElementById('authTokenOutput').textContent = 'fetchAuthTokenV2 not supported, falling back to fetchAuthToken';
+          document.getElementById('authTokenOutput').textContent = 'fetchAuthTokenIfConsentRecorded not supported, falling back to fetchAuthToken';
           fetchAuthToken();
           return;
         }
         const consentMessage = 'Implicit Consent Message';
-        sdk.fetchAuthTokenV2(consentMessage).then((res2) => {
+        sdk.fetchAuthTokenIfConsentRecorded(consentMessage).then((res2) => {
           document.getElementById('authTokenOutput').textContent = JSON.stringify(res2);
         }).catch((err) => {
           document.getElementById('authTokenOutput').textContent = err;
