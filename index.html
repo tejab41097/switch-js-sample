@@ -173,6 +173,11 @@
   <button id="fetchAddress">Fetch Address</button>
   <button id="fetchAddressWithoutSDK">Fetch Address Without SDK</button>
   <button id="consentStatus">Check Consent Status</button>
+  <button onclick="writeLocalAndCookie()">Write hello to storage & cookies</button>
+  <button onclick="clearLocalStorageAndCookies()">Clear storage & cookies</button>
+
+  <button onclick="fetchGeolocation()">Get Geolocation (HTML5)</button>
+  <div id="geoResult" style="margin-top:10px;"></div>
 
   <h2>Auth Token Output:</h2>
   <pre id="authTokenOutput"></pre>
@@ -192,6 +197,66 @@
       sessionStorage.setItem('sessionStorage', new Date())
       sessionStorage.getItem('sessionStorage')
     }
+    function writeLocalAndCookie() {
+      localStorage.setItem('helloKey', 'hello world');
+      document.cookie = 'helloKey=hello world; path=/; max-age=31536000';
+    }
+    function clearLocalStorageAndCookies() {
+      localStorage.clear();
+      document.cookie.split(';').forEach(cookie => {
+        const name = cookie.split('=')[0].trim();
+        if (name) {
+          document.cookie = name + '=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+        }
+      });
+    }
+
+    function fetchGeolocation() {
+      var geoResult = document.getElementById('geoResult');
+      if (!navigator.geolocation) {
+        alert('Geolocation is not supported in this browser/WebView. Please ensure location permissions are granted to the host app.');
+        geoResult.textContent = 'Geolocation not supported.';
+        return;
+      }
+      geoResult.textContent = 'Fetching location...';
+      navigator.geolocation.getCurrentPosition(
+        function (position) {
+          geoResult.textContent =
+            'Latitude: ' + position.coords.latitude +
+            ', Longitude: ' + position.coords.longitude +
+            '\nAccuracy: ' + position.coords.accuracy + 'm' +
+            (position.coords.altitude != null ? '\nAltitude: ' + position.coords.altitude + 'm' : '') +
+            (position.coords.speed != null ? '\nSpeed: ' + position.coords.speed + ' m/s' : '');
+        },
+        function (error) {
+          handleLocationError(error);
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      );
+    }
+
+    function handleLocationError(error) {
+      var geoResult = document.getElementById('geoResult');
+      console.error('Error accessing location:', error);
+      switch (error.code) {
+        case 1: // PERMISSION_DENIED
+          geoResult.textContent = 'Location permission denied.';
+          alert('Location permission was denied.');
+          break;
+        case 2: // POSITION_UNAVAILABLE
+          geoResult.textContent = 'Location unavailable.';
+          alert('Location information is unavailable. Please ensure location services are enabled on your device.');
+          break;
+        case 3: // TIMEOUT
+          geoResult.textContent = 'Location request timed out.';
+          alert('Location request timed out. Please try again.');
+          break;
+        default:
+          geoResult.textContent = 'Error: ' + error.message;
+          alert('Unable to get location: ' + error.message);
+          break;
+      }
+    }
         function triggerSmsObserver() {
           if(window.ElementsDetectorBridge.startDetection != null){
               window.ElementsDetectorBridge.startDetection()
@@ -199,16 +264,51 @@
             window.location.href = 'irctc_merchant.html';
         }
      function startJSCamera() {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        var legacyGetUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+        if (!legacyGetUserMedia) {
+          alert('Camera access is not supported in this browser/WebView. Please ensure camera permissions are granted to the host app.');
+          return;
+        }
+        legacyGetUserMedia.call(navigator, { video: true },
+          function (stream) {
+            var video = document.getElementById('videoPreview');
+            video.srcObject = stream;
+            video.play();
+          },
+          function (error) { handleCameraError(error); }
+        );
+        return;
+      }
+
+      // Always call getUserMedia directly — on iOS WKWebView this re-prompts
+      // the native permission dialog each time, even after a previous denial.
+      requestCameraStream();
+    }
+
+    function requestCameraStream() {
       navigator.mediaDevices.getUserMedia({ video: true })
         .then(function (stream) {
-          // Stream is available, display it in a <video> element
-          const video = document.getElementById('videoPreview');
+          var video = document.getElementById('videoPreview');
           video.srcObject = stream;
           video.play();
         })
-        .catch(function (error) {
-          console.error('Error accessing camera:', error);
-        });
+        .catch(function (error) { handleCameraError(error); });
+    }
+
+    function handleCameraError(error) {
+      console.error('Error accessing camera:', error);
+      if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
+        alert('Camera permission was denied. Retry to trigger the permission prompt again.');
+      } else if (error.name === 'NotFoundError' || error.name === 'DevicesNotFoundError') {
+        alert('No camera device was found on this device.');
+      } else if (error.name === 'NotReadableError' || error.name === 'TrackStartError') {
+        alert('Camera is already in use by another application.');
+      } else if (error.name === 'SecurityError') {
+        alert('Camera access is blocked due to security restrictions. Ensure the page is served over HTTPS and the WebView allows camera access.');
+      } else {
+        alert('Unable to access the camera: ' + error.message);
+      }
     }
     window.onload = function displayQueryParams() {
       console.log("displayQueryParams:");
@@ -231,7 +331,11 @@
       }
     }
     function closeApp(){
-      window.NavigationBridge.closeApp('');
+        if (window && window.NavigationBridge) {
+          window.NavigationBridge.closeApp(''); 
+        } else if (window && window.webkit.messageHandlers) {
+          window.webkit.messageHandlers.closeApp.postMessage({})
+        }
     }
     function startDownload() {
       // Simulate a download link (can be any file type like PDF, MP3, etc.)
@@ -463,15 +567,17 @@
 
     function getCurrentLocation() {
       console.log('Trying to get current location')
-      PhonePe.PhonePe.build(PhonePe.Constants.Species.web, document.getElementById("osName").value).then((sdk) => {
+      PhonePe.PhonePe.build(PhonePe.Constants.Species.web).then((sdk) => {
 
         let res = sdk.isMethodSupported('getCurrentLocation')
         console.log('getCurrentLocation method supported = ' + res)
 
         sdk.getCurrentLocation().then((location) => {
           console.log("location received on js side = " + location)
+          alert("Location: " + JSON.stringify(location, null, 2))
         }).catch((err) => {
           console.log("Error found when fetching location = " + err)
+          alert("Error found when fetching location: " + JSON.stringify(err))
         })
       }).catch((err) => {
         console.log('Error caught when initializing PhonePe = ' + err)
