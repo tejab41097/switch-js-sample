@@ -375,7 +375,7 @@
 
     document.getElementById('initSdk').addEventListener('click', async () => {
       PhonePe.PhonePe.loggingEnabled = true
-      PhonePe.PhonePe.build(PhonePe.Constants.Species.web, document.getElementById("osName").value).then((sdk) => {
+      PhonePe.PhonePe.build(PhonePe.Constants.Species.web).then((sdk) => {
         document.getElementById('initSdkOutput').textContent = sdk.isMethodSupported('getSupportedWebSDKVersion');
       })
     })
@@ -516,7 +516,7 @@
 
 
     function startUpdatingLocation() {
-      PhonePe.PhonePe.build(PhonePe.Constants.Species.web, document.getElementById("osName").value).then((sdk) => {
+      PhonePe.PhonePe.build(PhonePe.Constants.Species.web).then((sdk) => {
         let res = sdk.isMethodSupported('startUpdatingLocation')
         console.log('startUpdatingLocation method supported = ' + res)
         sdk.startUpdatingLocation()
@@ -529,7 +529,7 @@
     }
 
     function stopUpdatingLocation() {
-      PhonePe.PhonePe.build(PhonePe.Constants.Species.web, document.getElementById("osName").value).then((sdk) => {
+      PhonePe.PhonePe.build(PhonePe.Constants.Species.web).then((sdk) => {
         let res = sdk.isMethodSupported('stopUpdatingLocation')
         console.log('stopUpdatingLocation method supported = ' + res)
         sdk.stopUpdatingLocation()
@@ -543,7 +543,7 @@
     }
 
     function registerLocationUpdateSuccessCallback() {
-      PhonePe.PhonePe.build(PhonePe.Constants.Species.web, document.getElementById("osName").value).then((sdk) => {
+      PhonePe.PhonePe.build(PhonePe.Constants.Species.web).then((sdk) => {
 
         sdk.registerLocationUpdateSuccessCallback('callbackName', (response) => {
           console.log('Location success response = ' + JSON.stringify(response))
@@ -555,7 +555,7 @@
     }
 
     function registerLocationUpdateFailureCallback() {
-      PhonePe.PhonePe.build(PhonePe.Constants.Species.web, document.getElementById("osName").value).then((sdk) => {
+      PhonePe.PhonePe.build(PhonePe.Constants.Species.web).then((sdk) => {
         sdk.registerLocationUpdateFailureCallback('callbackName', (response) => {
           console.log('Location failure response = ' + JSON.stringify(response))
         })
@@ -589,7 +589,7 @@
       let env = PhonePe.Constants.Species.web
       let location = PhonePe.Constants.Permission.LOCATION
 
-      PhonePe.PhonePe.build(env, document.getElementById("osName").value).then((sdk) => {
+      PhonePe.PhonePe.build(env).then((sdk) => {
         let res = sdk.isMethodSupported('seekPermission')
         console.log('seekPermission method supported = ' + res)
 
@@ -621,7 +621,7 @@
       let camera = PhonePe.Constants.Permission.CAMERA
       let audio = PhonePe.Constants.Permission.RECORD_AUDIO
 
-      PhonePe.PhonePe.build(env, document.getElementById("osName").value).then((sdk) => {
+      PhonePe.PhonePe.build(env).then((sdk) => {
 
         let res = sdk.isMethodSupported('seekPermission')
         console.log('seekPermission method supported = ' + res)
