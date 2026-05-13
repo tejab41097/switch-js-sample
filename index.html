@@ -166,7 +166,7 @@
   </form>
 
   <div id="status"></div>
-  <button onclick=startJSCamera()>Start Video Capture</button>
+  <button onclick=requestCameraStream()>Start Video Capture</button>
 
   <button id="authToken">Fetch Auth Token</button>
   <button id="authTokenIfConsentRecorded">Fetch Auth Token If Consent Recorded</button>
@@ -263,37 +263,38 @@
             }
             window.location.href = 'irctc_merchant.html';
         }
-     function startJSCamera() {
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        var legacyGetUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-        if (!legacyGetUserMedia) {
-          alert('Camera access is not supported in this browser/WebView. Please ensure camera permissions are granted to the host app.');
-          return;
+        
+    async function requestCameraStream() {
+      // 1. Handle OS specific permission checks
+      if (isAndroidDevice()) {
+        console.log("Android Device: Requesting native camera permission via bridge first.");
+        let hasNativePermission = await seekCameraPermission();
+        
+        if (!hasNativePermission) {
+          console.log('Native camera permission denied.');
+          PhonePe.PhonePe.build(PhonePe.Constants.Species.web).then((sdk) => {
+            if (sdk.isMethodSupported('openSettingsPageForPermission')) {
+              sdk.openSettingsPageForPermission().then(() => {
+                console.log('Successfully opened native app settings page for Camera');
+              });
+            }
+          });
+          return; // Stop execution, wait for user to grant permission in settings
         }
-        legacyGetUserMedia.call(navigator, { video: true },
-          function (stream) {
-            var video = document.getElementById('videoPreview');
-            video.srcObject = stream;
-            video.play();
-          },
-          function (error) { handleCameraError(error); }
-        );
-        return;
+      } else {
+        console.log("iOS Device: Bypassing native bridge. Requesting website-specific camera permission directly.");
       }
 
-      // Always call getUserMedia directly — on iOS WKWebView this re-prompts
-      // the native permission dialog each time, even after a previous denial.
-      requestCameraStream();
-    }
-
-    function requestCameraStream() {
+      // Directly prompt for the stream. On iOS WKWebView this triggers the permission popup.
       navigator.mediaDevices.getUserMedia({ video: true })
         .then(function (stream) {
           var video = document.getElementById('videoPreview');
           video.srcObject = stream;
           video.play();
         })
-        .catch(function (error) { handleCameraError(error); });
+        .catch(function (error) { 
+            handleCameraError(error); 
+        });
     }
 
     function handleCameraError(error) {
@@ -565,92 +566,113 @@
 
     }
 
-    function getCurrentLocation() {
-      console.log('Trying to get current location')
+    async function getCurrentLocation() {
+      console.log('Trying to get current location');
+      
+      // 1. Wait for permission check
+      let hasPermission = await seekLocationPermission();
+      
       PhonePe.PhonePe.build(PhonePe.Constants.Species.web).then((sdk) => {
+        
+        // 2. Handle Denied Permission Flow
+        if (!hasPermission) {
+          console.log('Location permission denied or not granted yet.');
+          
+          if (isAndroidDevice()) {
+            // Android: Open settings page
+            if (sdk.isMethodSupported('openSettingsPageForPermission')) {
+              sdk.openSettingsPageForPermission().then(() => {
+                console.log('Opened native settings page for Android.');
+              });
+            }
+          } else {
+            // iOS: Call getCurrentLocation directly to force Settings redirect
+            console.log('iOS detected. Forcing Settings redirect via getCurrentLocation.');
+            sdk.getCurrentLocation().catch((err) => {
+              if (err && err.error_code === 'LOCATION_FETCH_FAILURE') {
+                alert("Location permission required. If you just enabled it in Settings, please click fetch again.");
+              }
+            });
+          }
+          return; // Exit here, don't try to fetch actual location
+        }
 
-        let res = sdk.isMethodSupported('getCurrentLocation')
-        console.log('getCurrentLocation method supported = ' + res)
+        // 3. Handle Granted Permission Flow
+        if (!sdk.isMethodSupported('getCurrentLocation')) {
+          console.log('getCurrentLocation method supported = false');
+          return;
+        }
 
         sdk.getCurrentLocation().then((location) => {
-          console.log("location received on js side = " + location)
-          alert("Location: " + JSON.stringify(location, null, 2))
+          console.log("location received on js side = ", location);
+          alert("Location: " + JSON.stringify(location, null, 2));
         }).catch((err) => {
-          console.log("Error found when fetching location = " + err)
-          alert("Error found when fetching location: " + JSON.stringify(err))
-        })
-      }).catch((err) => {
-        console.log('Error caught when initializing PhonePe = ' + err)
-      })
+          console.log("Error found when fetching location = ", err);
+          if (err && err.error_code === 'LOCATION_FETCH_FAILURE') {
+            alert("Location fetch failed. Try again.");
+          } else {
+            alert("Error found when fetching location: " + JSON.stringify(err));
+          }
+        });
 
+      }).catch((err) => {
+        console.log('Error caught when initializing PhonePe = ', err);
+      });
     }
 
     function seekLocationPermission() {
-      let env = PhonePe.Constants.Species.web
-      let location = PhonePe.Constants.Permission.LOCATION
+      return new Promise((resolve) => {
+        let env = PhonePe.Constants.Species.web;
+        let location = PhonePe.Constants.Permission.LOCATION;
 
-      PhonePe.PhonePe.build(env).then((sdk) => {
-        let res = sdk.isMethodSupported('seekPermission')
-        console.log('seekPermission method supported = ' + res)
-
-        sdk.seekPermission([location]).then((data) => {
-          console.log('Receieved response from seekPermission: ' + JSON.stringify(data))
-
-          if (data[0].permissionGranted) {
-            console.log('Successfully got permission for location')
-          } else if (!data[0].willShowPermissionAlertAgain) {
-            console.log('Permission denied.')
-            let isSupported = sdk.isMethodSupported('openSettingsPageForPermission')
-            console.log('openSettingsPageForPermission method supported = ' + isSupported)
-            sdk.openSettingsPageForPermission().then(data => { 
-              console.log(JSON.stringify(data))
-            });
-          } else {
-            console.log('Permission denied temporarily.')
+        PhonePe.PhonePe.build(env).then((sdk) => {
+          // Verify method support
+          if (!sdk.isMethodSupported('seekPermission')) {
+            console.log('seekPermission not supported. Fallback to browser permissions.');
+            resolve(false); 
+            return;
           }
-        }).catch((err) => {
 
-        })
-      }).catch((err) => {
-        console.log('Failed to fetch permission with error = ' + err)
-      })
+          sdk.seekPermission([location]).then((data) => {
+            console.log('Received response from seekPermission: ' + JSON.stringify(data));
+            let permissionData = data[0];
+            resolve(permissionData.permissionGranted);
+          }).catch((err) => {
+            console.log('Failed to fetch permission with error = ', err);
+            resolve(false);
+          });
+        }).catch((err) => {
+          console.log('Failed to build SDK = ', err);
+          resolve(false);
+        });
+      });
     }
 
     function seekCameraPermission() {
-      let env = PhonePe.Constants.Species.web
-      let camera = PhonePe.Constants.Permission.CAMERA
-      let audio = PhonePe.Constants.Permission.RECORD_AUDIO
+      return new Promise((resolve) => {
+        let env = PhonePe.Constants.Species.web;
+        let camera = PhonePe.Constants.Permission.CAMERA;
 
-      PhonePe.PhonePe.build(env).then((sdk) => {
-
-        let res = sdk.isMethodSupported('seekPermission')
-        console.log('seekPermission method supported = ' + res)
-
-        sdk.seekPermission([camera, audio]).then((data) => {
-          console.log('Receieved response from seekPermission: ' + JSON.stringify(data))
-          for (let i = 0; i < data.length; i++) {
-            const item = data[i];
-            if (item.permissionGranted) {
-              console.log('Successfully got permission for ', item.permission)
-            } else if (!item.willShowPermissionAlertAgain) {
-              console.log('willShowPermissionAlertAgain.')
-              let isSupported = sdk.isMethodSupported('openSettingsPageForPermission')
-              console.log('openSettingsPageForPermission method supported = ' + isSupported)
-              sdk.openSettingsPageForPermission().then(() => {
-                console.log('Successfully opened settings page')
-              })
-              break;
-              console.log('Permission denied temporarily.')
-            } else {
-              break;
-            }
+        PhonePe.PhonePe.build(env).then((sdk) => {
+          if (!sdk.isMethodSupported('seekPermission')) {
+            console.log('seekPermission method not supported');
+            resolve(false);
+            return;
           }
-        }).catch((err) => {
 
-        })
-      }).catch((err) => {
-        console.log('Failed to fetch permission with error = ' + err)
-      })
+          sdk.seekPermission([camera]).then((data) => {
+            console.log('Received response from seekPermission: ' + JSON.stringify(data));
+            let cameraPermission = data[0]; 
+            resolve(cameraPermission.permissionGranted);
+          }).catch((err) => {
+            console.log('Error during seekPermission: ', err);
+            resolve(false);
+          });
+        }).catch((err) => {
+          console.log('Failed to build SDK for camera permission = ', err);
+          resolve(false);
+        });
+      });
     }
 
     const imageInput = document.getElementById('imageUpload');
