@@ -99,7 +99,17 @@
 </head>
 
 <body>
-  <script src="./lib/bundle.js"></script>
+  <script src="./lib/bundle.js?v=signals-ca1b1391"></script>
+  <script src="./signals.js?v=1"></script>
+
+  <section class="section">
+    <h2>Signals (Android)</h2>
+    <p>Requires SIGNALS permission for this domain in the merchant manifest.
+      Signals are fetched only when you press the button.</p>
+    <label><input id="reveal-signals" type="checkbox" checked> Show user-specific values on the next run (do not share screenshots)</label>
+    <button id="get-signals" type="button">Get signals — getSignals()</button>
+    <pre id="signals-output" style="white-space: pre-wrap; overflow-wrap: anywhere;">Tap the button to fetch and display the current merchant's signals.</pre>
+  </section>
 
   <br>
   <h2>Permission Bridges</h2>
