@@ -18,7 +18,6 @@
 
   window.getSignals = async function () {
     var output = document.getElementById("signals-output");
-    var reveal = document.getElementById("reveal-signals");
     if (output) output.textContent = "Checking getSignals support...";
     try {
       if (typeof window.PhonePe?.PhonePe?.prototype?.getSignals !== "function") {
@@ -33,12 +32,8 @@
       if (!signals || Array.isArray(signals) || typeof signals !== "object") {
         throw new Error("Expected a JSON object.");
       }
-      // Only display user-specific values when the tester explicitly opts in.
-      // Do not write them to console, analytics, or persistent storage.
-      if (output) output.textContent = reveal && reveal.checked
-        ? JSON.stringify(signals, null, 2)
-        : "PASS: getSignals returned an object. Keys: " +
-          Object.keys(signals).join(", ") + ". Values hidden; select 'Show values' to inspect on the next run.";
+      // Display the response for this explicit request without logging or persisting it.
+      if (output) output.textContent = JSON.stringify(signals, null, 2);
       // Return diagnostics rather than signal values so a console invocation
       // does not automatically print personal information.
       return { passed: true, keys: Object.keys(signals) };
