@@ -1,6 +1,7 @@
 <html lang="en">
 
 <head>
+  <meta charset="UTF-8">
 
   <title>Switch Standard Integration</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -99,13 +100,19 @@
 </head>
 
 <body>
-  <script src="./lib/bundle.js?v=signals-ca1b1391"></script>
-  <script src="./signals.js?v=2"></script>
+  <script src="./lib/bundle.js?v=app-info-ceff0c63"></script>
+  <script src="./signals.js?v=3"></script>
 
   <section class="section">
     <h2>Signals Bridge</h2>
     <button id="get-signals" type="button">Get signals — getSignals()</button>
     <pre id="signals-output" style="white-space: pre-wrap; overflow-wrap: anywhere;">Tap the button to fetch and display the current merchant's signals.</pre>
+  </section>
+
+  <section class="section">
+    <h2>App Info Bridge</h2>
+    <button id="get-app-info" type="button">Get app info — getAppInfo()</button>
+    <pre id="app-info-output" aria-live="polite" style="white-space: pre-wrap; overflow-wrap: anywhere;">Tap the button to fetch PhonePe's app version, language and platform.</pre>
   </section>
 
   <br>
