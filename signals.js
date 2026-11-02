@@ -85,8 +85,8 @@
       if (typeof window.PhonePe?.PhonePe?.prototype?.getAppInfo !== "function") {
         throw new Error("Loaded SDK does not expose getAppInfo. Load the new SDK bundle.");
       }
-      if (typeof window.JsHandler?.getAppInfo !== "function") {
-        var unavailable = new Error("Native JsHandler.getAppInfo is unavailable. Open this page inside a supported PhonePe app or add the bridge to the simulator.");
+      if (typeof window.AuthBridge?.getAppInfo !== "function") {
+        var unavailable = new Error("Native AuthBridge.getAppInfo is unavailable. Open this page inside a supported PhonePe app with AUTH permission or add the bridge to the simulator.");
         unavailable.code = "APP_INFO_NOT_AVAILABLE";
         throw unavailable;
       }

@@ -6,7 +6,7 @@ const vm = require('node:vm')
 const crypto = require('node:crypto')
 const root = path.resolve(__dirname, '..')
 
-function setup() {
+function setup(nativeVersion = '9') {
   const ready = []
   const output = { textContent: '' }
   const button = { disabled: false, addEventListener(event, callback) { this[event] = callback } }
@@ -25,7 +25,7 @@ function setup() {
   vm.runInContext(fs.readFileSync(path.join(root, 'signals.js'), 'utf8'), sandbox)
   sandbox.MetadataBridge = { getSupportedWebSDKVersion(request) {
     const { callbackId } = JSON.parse(request)
-    queueMicrotask(() => sandbox.PhonePe.MessagingHandler.callback(callbackId, '1', '1'))
+    queueMicrotask(() => sandbox.PhonePe.MessagingHandler.callback(callbackId, '1', nativeVersion))
   } }
   ready.forEach(callback => callback())
   return { sandbox, output, button, appOutput, appButton }
@@ -96,7 +96,7 @@ test('invalid JSON and non-object signal responses are handled by the sample', a
 test('app-info button still works with the regenerated SDK bundle', async () => {
   const { sandbox, appOutput, appButton } = setup()
   const expected = { app_version: 30010100, language: 'en', platform: 'Android' }
-  sandbox.JsHandler = { getAppInfo(context, data, callback) {
+  sandbox.AuthBridge = { getAppInfo(context, data, callback) {
     assert.equal(data, '{}')
     queueMicrotask(() => sandbox[callback]('null', 'null', context,
       Buffer.from(JSON.stringify({data:expected})).toString('base64')))
