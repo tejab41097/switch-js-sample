@@ -23,8 +23,8 @@
       if (typeof window.PhonePe?.PhonePe?.prototype?.getSignals !== "function") {
         throw new Error("Loaded SDK does not expose getSignals. Load the new SDK bundle.");
       }
-      if (typeof window.SignalBridge?.getSignals !== "function") {
-        throw new Error("Native SignalBridge is unavailable. Install/configure the new native bridge first.");
+      if (typeof window.SignalsBridge?.getSignals !== "function") {
+        throw new Error("Native SignalsBridge is unavailable. Install/configure the new native bridge first.");
       }
       var sdk = await bounded(PhonePe.PhonePe.build("web", "android"), "SDK initialization");
       if (!sdk.isMethodSupported("getSignals")) throw new Error("getSignals is unsupported.");
