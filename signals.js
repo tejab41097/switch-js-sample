@@ -85,8 +85,9 @@
       if (typeof window.PhonePe?.PhonePe?.prototype?.getAppInfo !== "function") {
         throw new Error("Loaded SDK does not expose getAppInfo. Load the new SDK bundle.");
       }
-      if (typeof window.AuthBridge?.getAppInfo !== "function") {
-        var unavailable = new Error("Native AuthBridge.getAppInfo is unavailable. Open this page inside a supported PhonePe app with AUTH permission or add the bridge to the simulator.");
+      if (typeof window.MetadataBridge?.getAppInfo !== "function" &&
+          typeof window.webkit?.messageHandlers?.getAppInfo?.postMessage !== "function") {
+        var unavailable = new Error("Native metadata getAppInfo is unavailable. Open inside a supported PhonePe app with the MetadataBridge exposed for this domain.");
         unavailable.code = "APP_INFO_NOT_AVAILABLE";
         throw unavailable;
       }
@@ -94,7 +95,7 @@
       if (!sdk.isMethodSupported("getAppInfo")) {
         throw new Error("getAppInfo is not supported in this environment.");
       }
-      var appInfo = await sdk.getAppInfo();
+      var appInfo = JSON.parse(await bounded(sdk.getAppInfo(), "getAppInfo"));
       if (output) output.textContent = JSON.stringify(appInfo, null, 2);
       return { passed: true, keys: Object.keys(appInfo) };
     } catch (error) {
